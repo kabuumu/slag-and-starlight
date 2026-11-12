@@ -26,6 +26,7 @@ var is_melee_mode: bool = false
 var _manual_weapon_override: bool = false
 var is_crouching: bool = false
 var in_vent: bool = false
+var is_dead: bool = false
 var weapon_view: WeaponView2D = null
 
 var _is_holding_attack: bool = false
@@ -50,6 +51,19 @@ func _ready() -> void:
 
 
 func _unhandled_input(event: InputEvent) -> void:
+	if is_dead:
+		if event.is_action_pressed("reload") or (event is InputEventKey and event.pressed and not event.echo and event.keycode == KEY_R):
+			var ps_dead: Node = get_node_or_null("/root/PlayerStats")
+			if ps_dead != null:
+				ps_dead.hp = ps_dead.max_hp
+				is_dead = false
+				velocity = Vector3.ZERO
+				global_position = Vector3(0.0, 0.2, 2.5)
+				var eb_dead: Node = get_node_or_null("/root/EventBus")
+				if eb_dead != null:
+					eb_dead.player_stats_changed.emit()
+				_log_combat("Suit rebooted at checkpoint.", "combat")
+		return
 	if event is InputEventMouseButton and event.pressed:
 		if event.button_index in [MOUSE_BUTTON_LEFT, MOUSE_BUTTON_RIGHT]:
 			if Input.mouse_mode != Input.MOUSE_MODE_CAPTURED and not DisplayServer.get_name().begins_with("headless"):
@@ -101,6 +115,16 @@ func _unhandled_input(event: InputEvent) -> void:
 
 
 func _physics_process(delta: float) -> void:
+	var stats: Node = get_node_or_null("/root/PlayerStats")
+	if stats != null and int(stats.hp) <= 0:
+		if not is_dead:
+			is_dead = true
+			velocity = Vector3.ZERO
+			_log_combat("CRITICAL: Suit integrity lost! Press [R] to reboot at checkpoint.", "combat")
+		return
+	elif is_dead and stats != null and int(stats.hp) > 0:
+		is_dead = false
+
 	if _is_holding_attack:
 		_attack_hold_time += delta
 
@@ -111,7 +135,6 @@ func _physics_process(delta: float) -> void:
 			_log_combat("Blaster capacitor cooled.", "combat")
 		heat_changed.emit(current_heat, max_heat, is_overheated)
 
-	var stats: Node = get_node_or_null("/root/PlayerStats")
 	if stats != null:
 		var sp: float = float(stats.suit_power)
 		var max_sp: float = float(stats.max_suit_power)

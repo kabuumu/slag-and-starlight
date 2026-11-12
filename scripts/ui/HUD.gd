@@ -28,6 +28,28 @@ func _ready() -> void:
 	_connect_player()
 
 
+var _death_banner: Label = null
+
+
+func _ensure_death_banner() -> void:
+	if _death_banner != null:
+		return
+	_death_banner = Label.new()
+	_death_banner.name = "DeathBanner"
+	_death_banner.text = "CRITICAL FAILURE — SUIT INTEGRITY LOST\nPRESS [R] TO REBOOT AT CHECKPOINT"
+	_death_banner.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	_death_banner.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
+	_death_banner.anchors_preset = Control.PRESET_CENTER
+	_death_banner.offset_left = -240
+	_death_banner.offset_right = 240
+	_death_banner.offset_top = -36
+	_death_banner.offset_bottom = 36
+	_death_banner.add_theme_color_override("font_color", Color(1.0, 0.25, 0.2, 1.0))
+	_death_banner.add_theme_font_size_override("font_size", 18)
+	_death_banner.visible = false
+	add_child(_death_banner)
+
+
 func _connect_player() -> void:
 	var tree: SceneTree = get_tree()
 	if tree == null:
@@ -36,7 +58,7 @@ func _connect_player() -> void:
 	if player != null:
 		if "weapon_view" in player:
 			player.set("weapon_view", weapon_view)
-		if player.has_signal("heat_changed"):
+		if player.has_signal("heat_changed") and not player.heat_changed.is_connected(_on_heat_changed):
 			player.heat_changed.connect(_on_heat_changed)
 
 
@@ -58,6 +80,9 @@ func _refresh_stats() -> void:
 		suit_bar.value = sp
 	if suit_value != null:
 		suit_value.text = "%d/%d" % [int(sp), int(max_sp)]
+	_ensure_death_banner()
+	if _death_banner != null:
+		_death_banner.visible = (hp <= 0)
 
 
 func _on_heat_changed(cur_heat: float, max_h: float, is_overheated: bool) -> void:

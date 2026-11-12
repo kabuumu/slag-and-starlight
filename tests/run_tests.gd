@@ -67,8 +67,10 @@ func _run_all() -> void:
 		for ms in _milestones_to_run(milestone):
 			var suite_path: String = UNIT_SUITES[ms]
 			var suite_script := load(suite_path) as GDScript
-			if suite_script == null:
-				h.skip_test("UnitSuite_%s" % ms, "Failed to load %s" % suite_path)
+			if suite_script == null or not suite_script.can_instantiate():
+				h.begin_test("UnitSuite_%s_load" % ms)
+				h.assert_true(false, "Failed to load/parse %s" % suite_path)
+				h.end_test()
 				continue
 			var suite: RefCounted = suite_script.new()
 			suite.run(self, h, tier)
@@ -76,16 +78,24 @@ func _run_all() -> void:
 	# Tier 3: Cross-Feature Combinations
 	if tier in ["all", "3"] and milestone in ["M4", "M5", "ALL"]:
 		var t3_script := load(E2E_SUITES["3"]) as GDScript
-		if t3_script != null:
+		if t3_script != null and t3_script.can_instantiate():
 			var t3: RefCounted = t3_script.new()
 			t3.run(self, h)
+		else:
+			h.begin_test("E2E_Tier3_load")
+			h.assert_true(false, "Failed to load/parse %s" % E2E_SUITES["3"])
+			h.end_test()
 
 	# Tier 4: Real-World Application Scenarios
 	if tier in ["all", "4"] and milestone in ["M5", "ALL"]:
 		var t4_script := load(E2E_SUITES["4"]) as GDScript
-		if t4_script != null:
+		if t4_script != null and t4_script.can_instantiate():
 			var t4: RefCounted = t4_script.new()
 			t4.run(self, h)
+		else:
+			h.begin_test("E2E_Tier4_load")
+			h.assert_true(false, "Failed to load/parse %s" % E2E_SUITES["4"])
+			h.end_test()
 
 	print("\n============================================================")
 	print("Summary: %d passed | %d failed | %d skipped" % [h.passed, h.failed, h.skipped])

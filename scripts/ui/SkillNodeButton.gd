@@ -16,8 +16,11 @@ var state: State = State.LOCKED
 
 
 func _ready() -> void:
-	custom_minimum_size = Vector2(108, 36)
+	custom_minimum_size = Vector2(114, 42)
+	size = Vector2(114, 42)
+	autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	clip_text = true
+	add_theme_font_size_override("font_size", 11)
 	if not pressed.is_connected(_on_pressed):
 		pressed.connect(_on_pressed)
 	_refresh_visuals()

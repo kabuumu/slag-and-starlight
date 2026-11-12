@@ -3,8 +3,8 @@ extends RefCounted
 
 func run(tree: SceneTree, h: RefCounted, tier_filter: String) -> void:
 	print("\n[Suite] M2: ItemData, Paper-Doll UI, Drag-and-Drop & Locational Armor")
-	var run_t1 := tier_filter in ["all", "1"]
-	var run_t2 := tier_filter in ["all", "2"]
+	var run_t1 = tier_filter in ["all", "1"]
+	var run_t2 = tier_filter in ["all", "2"]
 
 	if run_t1:
 		_test_t1_item_data_properties(tree, h)
@@ -34,7 +34,7 @@ func _make_item(item_script: GDScript, id: String, slot_type: int, armor: int, d
 
 func _test_t1_item_data_properties(tree: SceneTree, h: RefCounted) -> void:
 	h.begin_test("T1_M2_item_data_resource_properties")
-	var item_script := h.load_script_safe("res://scripts/resources/ItemData.gd")
+	var item_script = h.load_script_safe("res://scripts/resources/ItemData.gd")
 	if not h.assert_not_null(item_script, "ItemData.gd must exist"):
 		h.end_test()
 		return
@@ -46,17 +46,17 @@ func _test_t1_item_data_properties(tree: SceneTree, h: RefCounted) -> void:
 
 func _test_t1_inventory_ui_7_slots_and_grid(tree: SceneTree, h: RefCounted) -> void:
 	h.begin_test("T1_M2_inventory_ui_7_equipment_slots")
-	var packed := h.load_scene_safe("res://scenes/ui/InventoryUI.tscn")
+	var packed = h.load_scene_safe("res://scenes/ui/InventoryUI.tscn")
 	if not h.assert_not_null(packed, "InventoryUI.tscn must exist"):
 		h.end_test()
 		return
-	var ui := packed.instantiate()
-	var slot_script := h.load_script_safe("res://scripts/ui/InventorySlot.gd")
+	var ui = packed.instantiate()
+	var slot_script = h.load_script_safe("res://scripts/ui/InventorySlot.gd")
 	h.assert_not_null(slot_script, "InventorySlot.gd must exist")
-	var slot_count := 0
+	var slot_count = 0
 	var stack: Array[Node] = [ui]
 	while not stack.is_empty():
-		var n := stack.pop_back()
+		var n = stack.pop_back()
 		if n is PanelContainer and n.get_script() == slot_script:
 			slot_count += 1
 		for c in n.get_children():
@@ -68,12 +68,12 @@ func _test_t1_inventory_ui_7_slots_and_grid(tree: SceneTree, h: RefCounted) -> v
 
 func _test_t1_inventory_slot_drag_drop_contract(tree: SceneTree, h: RefCounted) -> void:
 	h.begin_test("T1_M2_inventory_slot_drag_and_drop")
-	var slot_script := h.load_script_safe("res://scripts/ui/InventorySlot.gd")
-	var item_script := h.load_script_safe("res://scripts/resources/ItemData.gd")
+	var slot_script = h.load_script_safe("res://scripts/ui/InventorySlot.gd")
+	var item_script = h.load_script_safe("res://scripts/resources/ItemData.gd")
 	if not h.assert_not_null(slot_script, "InventorySlot.gd required") or not h.assert_not_null(item_script, "ItemData.gd required"):
 		h.end_test()
 		return
-	var slot := PanelContainer.new()
+	var slot = PanelContainer.new()
 	slot.set_script(slot_script)
 	h.assert_true(slot.has_method("_get_drag_data"), "InventorySlot must override _get_drag_data")
 	h.assert_true(slot.has_method("_can_drop_data"), "InventorySlot must override _can_drop_data")
@@ -81,8 +81,8 @@ func _test_t1_inventory_slot_drag_drop_contract(tree: SceneTree, h: RefCounted) 
 	# Matching slot_type (e.g., Torso = 2)
 	if "allowed_slot_type" in slot:
 		slot.set("allowed_slot_type", 2)
-		var armor := _make_item(item_script, "pressure_suit", 2, 10, 50)
-		var drag_payload := {"item": armor, "source_slot": null}
+		var armor = _make_item(item_script, "pressure_suit", 2, 10, 50)
+		var drag_payload = {"item": armor, "source_slot": null}
 		h.assert_true(slot._can_drop_data(Vector2.ZERO, drag_payload), "Matching slot_type must allow drop")
 	slot.queue_free()
 	h.end_test()
@@ -91,13 +91,13 @@ func _test_t1_inventory_slot_drag_drop_contract(tree: SceneTree, h: RefCounted) 
 func _test_t1_total_armor_recalculation(tree: SceneTree, h: RefCounted) -> void:
 	h.begin_test("T1_M2_total_armor_recalculation")
 	h.reset_singletons(tree)
-	var ps := h.get_autoload(tree, "PlayerStats")
-	var item_script := h.load_script_safe("res://scripts/resources/ItemData.gd")
+	var ps = h.get_autoload(tree, "PlayerStats")
+	var item_script = h.load_script_safe("res://scripts/resources/ItemData.gd")
 	if not h.assert_not_null(ps, "PlayerStats required") or not h.assert_not_null(item_script, "ItemData.gd required"):
 		h.end_test()
 		return
-	var torso := _make_item(item_script, "tattered_pressure_suit", 2, 8, 40)
-	var head := _make_item(item_script, "mining_visor", 1, 4, 30)
+	var torso = _make_item(item_script, "tattered_pressure_suit", 2, 8, 40)
+	var head = _make_item(item_script, "mining_visor", 1, 4, 30)
 	ps.equipped_items[2] = torso
 	ps.equipped_items[1] = head
 	ps.recalculate_derived_stats()
@@ -109,8 +109,8 @@ func _test_t1_total_armor_recalculation(tree: SceneTree, h: RefCounted) -> void:
 func _test_t1_locational_armor_damage_reduction(tree: SceneTree, h: RefCounted) -> void:
 	h.begin_test("T1_M2_locational_armor_damage_and_durability")
 	h.reset_singletons(tree)
-	var ps := h.get_autoload(tree, "PlayerStats")
-	var item_script := h.load_script_safe("res://scripts/resources/ItemData.gd")
+	var ps = h.get_autoload(tree, "PlayerStats")
+	var item_script = h.load_script_safe("res://scripts/resources/ItemData.gd")
 	if not h.assert_not_null(ps, "PlayerStats required") or not h.assert_not_null(item_script, "ItemData.gd required"):
 		h.end_test()
 		return
@@ -130,7 +130,7 @@ func _test_t1_locational_armor_damage_reduction(tree: SceneTree, h: RefCounted) 
 func _test_t2_locational_damage_zero_negative_overflow(tree: SceneTree, h: RefCounted) -> void:
 	h.begin_test("T2_M2_locational_damage_zero_negative_overflow")
 	h.reset_singletons(tree)
-	var ps := h.get_autoload(tree, "PlayerStats")
+	var ps = h.get_autoload(tree, "PlayerStats")
 	if not h.assert_not_null(ps, "PlayerStats required"):
 		h.end_test()
 		return
@@ -148,8 +148,8 @@ func _test_t2_locational_damage_zero_negative_overflow(tree: SceneTree, h: RefCo
 func _test_t2_zero_durability_armor_provides_no_protection(tree: SceneTree, h: RefCounted) -> void:
 	h.begin_test("T2_M2_zero_durability_armor_broken")
 	h.reset_singletons(tree)
-	var ps := h.get_autoload(tree, "PlayerStats")
-	var item_script := h.load_script_safe("res://scripts/resources/ItemData.gd")
+	var ps = h.get_autoload(tree, "PlayerStats")
+	var item_script = h.load_script_safe("res://scripts/resources/ItemData.gd")
 	if not h.assert_not_null(ps, "PlayerStats required") or not h.assert_not_null(item_script, "ItemData.gd required"):
 		h.end_test()
 		return
@@ -165,17 +165,17 @@ func _test_t2_zero_durability_armor_provides_no_protection(tree: SceneTree, h: R
 
 func _test_t2_slot_type_mismatch_rejected(tree: SceneTree, h: RefCounted) -> void:
 	h.begin_test("T2_M2_inventory_slot_mismatch_rejected")
-	var slot_script := h.load_script_safe("res://scripts/ui/InventorySlot.gd")
-	var item_script := h.load_script_safe("res://scripts/resources/ItemData.gd")
+	var slot_script = h.load_script_safe("res://scripts/ui/InventorySlot.gd")
+	var item_script = h.load_script_safe("res://scripts/resources/ItemData.gd")
 	if not h.assert_not_null(slot_script, "InventorySlot.gd required") or not h.assert_not_null(item_script, "ItemData.gd required"):
 		h.end_test()
 		return
-	var head_slot := PanelContainer.new()
+	var head_slot = PanelContainer.new()
 	head_slot.set_script(slot_script)
 	if "allowed_slot_type" in head_slot:
 		head_slot.set("allowed_slot_type", 1) # Head
-		var torso_item := _make_item(item_script, "pressure_suit", 2, 10, 50)
-		var drag_payload := {"item": torso_item, "source_slot": null}
+		var torso_item = _make_item(item_script, "pressure_suit", 2, 10, 50)
+		var drag_payload = {"item": torso_item, "source_slot": null}
 		h.assert_false(head_slot._can_drop_data(Vector2.ZERO, drag_payload), "Torso item must NOT drop into Head slot")
 	head_slot.queue_free()
 	h.end_test()
@@ -184,8 +184,8 @@ func _test_t2_slot_type_mismatch_rejected(tree: SceneTree, h: RefCounted) -> voi
 func _test_t2_empty_and_full_backpack(tree: SceneTree, h: RefCounted) -> void:
 	h.begin_test("T2_M2_empty_and_full_backpack")
 	h.reset_singletons(tree)
-	var ps := h.get_autoload(tree, "PlayerStats")
-	var item_script := h.load_script_safe("res://scripts/resources/ItemData.gd")
+	var ps = h.get_autoload(tree, "PlayerStats")
+	var item_script = h.load_script_safe("res://scripts/resources/ItemData.gd")
 	if not h.assert_not_null(ps, "PlayerStats required") or not h.assert_not_null(item_script, "ItemData.gd required"):
 		h.end_test()
 		return

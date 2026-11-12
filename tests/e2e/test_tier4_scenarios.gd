@@ -14,19 +14,19 @@ func run(tree: SceneTree, h: RefCounted) -> void:
 func _test_t4_sublevel04_stealth_lockpick_path(tree: SceneTree, h: RefCounted) -> void:
 	h.begin_test("T4_sublevel04_rooms_1_to_7_stealth_lockpick_path")
 	h.reset_singletons(tree)
-	var sl04 := h.load_scene_safe("res://scenes/levels/SubLevel04.tscn")
-	var gs := h.get_autoload(tree, "GameState")
-	var ps := h.get_autoload(tree, "PlayerStats")
-	var eb := h.get_autoload(tree, "EventBus")
+	var sl04 = h.load_scene_safe("res://scenes/levels/SubLevel04.tscn")
+	var gs = h.get_autoload(tree, "GameState")
+	var ps = h.get_autoload(tree, "PlayerStats")
+	var eb = h.get_autoload(tree, "EventBus")
 	if not h.assert_not_null(sl04, "SubLevel04.tscn required") or not h.assert_not_null(gs, "GameState required") or not h.assert_not_null(ps, "PlayerStats required"):
 		h.end_test()
 		return
-	var level := sl04.instantiate()
+	var level = sl04.instantiate()
 	# Simulate Room 1: wake up at 50% HP, equip Pressure Suit & Blaster
 	ps.hp = int(ps.max_hp * 0.5)
 	h.assert_gt(ps.hp, 0)
 	# Room 3: Start Dead Man's Switch
-	var qm := h.get_autoload(tree, "QuestManager")
+	var qm = h.get_autoload(tree, "QuestManager")
 	if qm != null and qm.has_method("start_quest"):
 		qm.start_quest("dead_mans_switch")
 		h.assert_has(gs.active_quests, "dead_mans_switch")
@@ -45,13 +45,13 @@ func _test_t4_sublevel04_stealth_lockpick_path(tree: SceneTree, h: RefCounted) -
 func _test_t4_sublevel04_tech_hack_path(tree: SceneTree, h: RefCounted) -> void:
 	h.begin_test("T4_sublevel04_rooms_1_to_7_tech_hack_path")
 	h.reset_singletons(tree)
-	var gs := h.get_autoload(tree, "GameState")
-	var eb := h.get_autoload(tree, "EventBus")
-	var sl04 := h.load_scene_safe("res://scenes/levels/SubLevel04.tscn")
+	var gs = h.get_autoload(tree, "GameState")
+	var eb = h.get_autoload(tree, "EventBus")
+	var sl04 = h.load_scene_safe("res://scenes/levels/SubLevel04.tscn")
 	if not h.assert_not_null(sl04, "SubLevel04.tscn required") or not h.assert_not_null(gs, "GameState required"):
 		h.end_test()
 		return
-	var level := sl04.instantiate()
+	var level = sl04.instantiate()
 	# Room 4 Path B: Wall Terminal hack opens blast door without alerting drones
 	if eb != null:
 		eb.minigame_completed.emit("room4_wall_terminal", true, {})
@@ -68,14 +68,14 @@ func _test_t4_sublevel04_tech_hack_path(tree: SceneTree, h: RefCounted) -> void:
 func _test_t4_sublevel04_grit_combat_path(tree: SceneTree, h: RefCounted) -> void:
 	h.begin_test("T4_sublevel04_rooms_1_to_7_grit_combat_path")
 	h.reset_singletons(tree)
-	var gs := h.get_autoload(tree, "GameState")
-	var jb_script := h.load_script_safe("res://scripts/world/JunctionBox.gd")
-	var sl04 := h.load_scene_safe("res://scenes/levels/SubLevel04.tscn")
+	var gs = h.get_autoload(tree, "GameState")
+	var jb_script = h.load_script_safe("res://scripts/world/JunctionBox.gd")
+	var sl04 = h.load_scene_safe("res://scenes/levels/SubLevel04.tscn")
 	if not h.assert_not_null(sl04, "SubLevel04.tscn required") or not h.assert_not_null(gs, "GameState required") or not h.assert_not_null(jb_script, "JunctionBox.gd required"):
 		h.end_test()
 		return
-	var level := sl04.instantiate()
-	var jb := StaticBody3D.new()
+	var level = sl04.instantiate()
+	var jb = StaticBody3D.new()
 	jb.set_script(jb_script)
 	tree.root.add_child(jb)
 	if h.assert_true(jb.has_method("blast_open"), "JunctionBox must expose blast_open()"):
@@ -91,8 +91,8 @@ func _test_t4_sublevel04_grit_combat_path(tree: SceneTree, h: RefCounted) -> voi
 func _test_t4_blackbox_turn_in_vs_keep(tree: SceneTree, h: RefCounted) -> void:
 	h.begin_test("T4_blackbox_turn_in_to_kael_vs_keep")
 	h.reset_singletons(tree)
-	var gs := h.get_autoload(tree, "GameState")
-	var ps := h.get_autoload(tree, "PlayerStats")
+	var gs = h.get_autoload(tree, "GameState")
+	var ps = h.get_autoload(tree, "PlayerStats")
 	if not h.assert_not_null(gs, "GameState required") or not h.assert_not_null(ps, "PlayerStats required"):
 		h.end_test()
 		return
@@ -118,14 +118,14 @@ func _test_t4_blackbox_turn_in_vs_keep(tree: SceneTree, h: RefCounted) -> void:
 func _test_t4_unit_734b_boss_and_rust_spire_transition(tree: SceneTree, h: RefCounted) -> void:
 	h.begin_test("T4_unit_734b_boss_and_rust_spire_outpost_transition")
 	h.reset_singletons(tree)
-	var boss_packed := h.load_scene_safe("res://scenes/enemies/Unit734B.tscn")
-	var hub_packed := h.load_scene_safe("res://scenes/levels/RustSpireOutpost.tscn")
-	var lift_script := h.load_script_safe("res://scripts/world/CargoLift.gd")
-	var gs := h.get_autoload(tree, "GameState")
+	var boss_packed = h.load_scene_safe("res://scenes/enemies/Unit734B.tscn")
+	var hub_packed = h.load_scene_safe("res://scenes/levels/RustSpireOutpost.tscn")
+	var lift_script = h.load_script_safe("res://scripts/world/CargoLift.gd")
+	var gs = h.get_autoload(tree, "GameState")
 	if not h.assert_not_null(boss_packed, "Unit734B.tscn required") or not h.assert_not_null(hub_packed, "RustSpireOutpost.tscn required") or not h.assert_not_null(lift_script, "CargoLift.gd required"):
 		h.end_test()
 		return
-	var boss := boss_packed.instantiate()
+	var boss = boss_packed.instantiate()
 	tree.root.add_child(boss)
 	if h.assert_true(boss.has_method("take_damage"), "Unit734B must expose take_damage()"):
 		boss.take_damage(9999, "blaster", false)
@@ -135,7 +135,7 @@ func _test_t4_unit_734b_boss_and_rust_spire_transition(tree: SceneTree, h: RefCo
 	boss.queue_free()
 
 	gs.set_flag("has_lift_keycard", true)
-	var lift := StaticBody3D.new()
+	var lift = StaticBody3D.new()
 	lift.set_script(lift_script)
 	tree.root.add_child(lift)
 	if h.assert_true(lift.has_method("can_activate"), "CargoLift must expose can_activate()"):
@@ -143,7 +143,7 @@ func _test_t4_unit_734b_boss_and_rust_spire_transition(tree: SceneTree, h: RefCo
 	tree.root.remove_child(lift)
 	lift.queue_free()
 
-	var hub := hub_packed.instantiate()
+	var hub = hub_packed.instantiate()
 	h.assert_not_null(hub, "RustSpireOutpost.tscn must instantiate after Cargo Lift transition")
 	hub.queue_free()
 	h.reset_singletons(tree)
@@ -153,11 +153,11 @@ func _test_t4_unit_734b_boss_and_rust_spire_transition(tree: SceneTree, h: RefCo
 func _test_t4_radiant_job_generation_and_completion(tree: SceneTree, h: RefCounted) -> void:
 	h.begin_test("T4_radiant_job_generation_and_completion_cycle")
 	h.reset_singletons(tree)
-	var gen_script := h.load_script_safe("res://scripts/world/RadiantJobGenerator.gd")
-	var qm := h.get_autoload(tree, "QuestManager")
-	var gs := h.get_autoload(tree, "GameState")
-	var eb := h.get_autoload(tree, "EventBus")
-	var item_script := h.load_script_safe("res://scripts/resources/ItemData.gd")
+	var gen_script = h.load_script_safe("res://scripts/world/RadiantJobGenerator.gd")
+	var qm = h.get_autoload(tree, "QuestManager")
+	var gs = h.get_autoload(tree, "GameState")
+	var eb = h.get_autoload(tree, "EventBus")
+	var item_script = h.load_script_safe("res://scripts/resources/ItemData.gd")
 	if not h.assert_not_null(gen_script, "RadiantJobGenerator.gd required") or not h.assert_not_null(qm, "QuestManager required") or not h.assert_not_null(gs, "GameState required"):
 		h.end_test()
 		return

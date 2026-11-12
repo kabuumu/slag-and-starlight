@@ -18,9 +18,9 @@ extends Node
 func _ready() -> void:
 	if sub_viewport_container != null:
 		sub_viewport_container.stretch = true
+		sub_viewport_container.stretch_shrink = 4
 		sub_viewport_container.texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST
 	if sub_viewport != null:
-		sub_viewport.size = Vector2i(320, 200)
 		sub_viewport.canvas_item_default_texture_filter = Viewport.DEFAULT_CANVAS_ITEM_TEXTURE_FILTER_NEAREST
 	if dialogue_ui != null:
 		dialogue_ui.add_to_group("dialogue_ui")

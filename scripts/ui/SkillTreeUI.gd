@@ -22,23 +22,23 @@ const SKILL_PATHS: Array[String] = [
 
 const NODE_POSITIONS: Dictionary = {
 	# Void-Scrapper (Left column)
-	"jury_rigged_blaster": Vector2(76, 20),
-	"overcharge_capacitor": Vector2(12, 95),
-	"ricochet_shot": Vector2(12, 170),
-	"piston_strike": Vector2(132, 95),
-	"scrap_shielding": Vector2(132, 170),
+	"jury_rigged_blaster": Vector2(68, 16),
+	"overcharge_capacitor": Vector2(4, 92),
+	"ricochet_shot": Vector2(4, 168),
+	"piston_strike": Vector2(128, 92),
+	"scrap_shielding": Vector2(128, 168),
 	# Cyber-Splicer (Center column)
-	"signal_bypass": Vector2(326, 20),
-	"turret_override": Vector2(262, 95),
-	"capacitor_meltdown": Vector2(262, 170),
-	"cell_recycler": Vector2(382, 95),
-	"field_nano_repair": Vector2(382, 170),
+	"signal_bypass": Vector2(320, 16),
+	"turret_override": Vector2(256, 92),
+	"capacitor_meltdown": Vector2(256, 168),
+	"cell_recycler": Vector2(380, 92),
+	"field_nano_repair": Vector2(380, 168),
 	# Tunnel-Rat (Right column)
-	"mag_tumbler_sense": Vector2(576, 20),
-	"shadow_stepper": Vector2(512, 95),
-	"ambush_calibration": Vector2(512, 170),
-	"miners_cant": Vector2(632, 95),
-	"black_market_appraisal": Vector2(632, 170),
+	"mag_tumbler_sense": Vector2(572, 16),
+	"shadow_stepper": Vector2(508, 92),
+	"ambush_calibration": Vector2(508, 168),
+	"miners_cant": Vector2(632, 92),
+	"black_market_appraisal": Vector2(632, 168),
 }
 
 const COLOR_LINE_LOCKED: Color = Color(0.32, 0.26, 0.26, 0.85)

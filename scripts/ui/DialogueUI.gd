@@ -52,7 +52,18 @@ func open_dialogue(data: Resource) -> void:
 	if npc_name_label != null:
 		npc_name_label.text = npc_name
 	if portrait_rect != null and portrait is Texture2D:
-		portrait_rect.texture = portrait
+		var tex: Texture2D = portrait
+		var w: int = tex.get_width()
+		var h: int = tex.get_height()
+		if w >= 256 and h == w * 2:
+			var atlas := AtlasTexture.new()
+			atlas.atlas = tex
+			atlas.region = Rect2(0.0, 0.0, float(w) / 4.0, float(h) / 8.0)
+			portrait_rect.texture = atlas
+		else:
+			portrait_rect.texture = tex
+		portrait_rect.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
+		portrait_rect.texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST
 
 	_append_line("[b]%s:[/b] %s" % [npc_name, greeting])
 	_rebuild_topics()

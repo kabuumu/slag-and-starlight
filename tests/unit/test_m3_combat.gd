@@ -3,8 +3,8 @@ extends RefCounted
 
 func run(tree: SceneTree, h: RefCounted, tier_filter: String) -> void:
 	print("\n[Suite] M3: 2D Weapon View, Blaster d100, Directional Melee & Enemy FSM")
-	var run_t1 := tier_filter in ["all", "1"]
-	var run_t2 := tier_filter in ["all", "2"]
+	var run_t1 = tier_filter in ["all", "1"]
+	var run_t2 = tier_filter in ["all", "2"]
 
 	if run_t1:
 		_test_t1_weapon_view_2d_bobbing(tree, h)
@@ -23,11 +23,11 @@ func run(tree: SceneTree, h: RefCounted, tier_filter: String) -> void:
 
 func _test_t1_weapon_view_2d_bobbing(tree: SceneTree, h: RefCounted) -> void:
 	h.begin_test("T1_M3_weapon_view_2d_bobbing")
-	var script := h.load_script_safe("res://scripts/player/WeaponView2D.gd")
+	var script = h.load_script_safe("res://scripts/player/WeaponView2D.gd")
 	if not h.assert_not_null(script, "WeaponView2D.gd must exist"):
 		h.end_test()
 		return
-	var node := AnimatedSprite2D.new()
+	var node = AnimatedSprite2D.new()
 	node.set_script(script)
 	if node.has_method("compute_bob_offset"):
 		var idle_off: Vector2 = node.compute_bob_offset(0.0, 1.0)
@@ -40,11 +40,11 @@ func _test_t1_weapon_view_2d_bobbing(tree: SceneTree, h: RefCounted) -> void:
 
 func _test_t1_blaster_hit_chance_formula(tree: SceneTree, h: RefCounted) -> void:
 	h.begin_test("T1_M3_blaster_hit_chance_formula")
-	var pc_script := h.load_script_safe("res://scripts/player/PlayerController.gd")
+	var pc_script = h.load_script_safe("res://scripts/player/PlayerController.gd")
 	if not h.assert_not_null(pc_script, "PlayerController.gd must exist"):
 		h.end_test()
 		return
-	var pc := CharacterBody3D.new()
+	var pc = CharacterBody3D.new()
 	pc.set_script(pc_script)
 	if pc.has_method("calculate_blaster_hit_chance"):
 		# Base 65 + (skill 10 * 2) - (dist 10 * 0.8) - evasion 5 = 65 + 20 - 8 - 5 = 72
@@ -56,11 +56,11 @@ func _test_t1_blaster_hit_chance_formula(tree: SceneTree, h: RefCounted) -> void
 
 func _test_t1_directional_melee_modifiers(tree: SceneTree, h: RefCounted) -> void:
 	h.begin_test("T1_M3_directional_melee_modifiers")
-	var pc_script := h.load_script_safe("res://scripts/player/PlayerController.gd")
+	var pc_script = h.load_script_safe("res://scripts/player/PlayerController.gd")
 	if not h.assert_not_null(pc_script, "PlayerController.gd must exist"):
 		h.end_test()
 		return
-	var pc := CharacterBody3D.new()
+	var pc = CharacterBody3D.new()
 	pc.set_script(pc_script)
 	if pc.has_method("get_melee_swing_modifiers"):
 		var thrust: Dictionary = pc.get_melee_swing_modifiers(Vector2(0, -40)) # Up -> Thrust
@@ -78,7 +78,7 @@ func _test_t1_directional_melee_modifiers(tree: SceneTree, h: RefCounted) -> voi
 
 func _test_t1_enemy_archetype_scenes_load(tree: SceneTree, h: RefCounted) -> void:
 	h.begin_test("T1_M3_all_5_enemy_archetype_scenes")
-	var scenes := [
+	var scenes = [
 		"res://scenes/enemies/SlagTick.tscn",
 		"res://scenes/enemies/MiningDrone.tscn",
 		"res://scenes/enemies/FeralDriller.tscn",
@@ -86,9 +86,9 @@ func _test_t1_enemy_archetype_scenes_load(tree: SceneTree, h: RefCounted) -> voi
 		"res://scenes/enemies/Unit734B.tscn",
 	]
 	for path in scenes:
-		var packed := h.load_scene_safe(path)
+		var packed = h.load_scene_safe(path)
 		if h.assert_not_null(packed, "Missing enemy scene: %s" % path):
-			var inst := packed.instantiate()
+			var inst = packed.instantiate()
 			h.assert_not_null(inst, "Failed to instantiate %s" % path)
 			inst.queue_free()
 	h.end_test()
@@ -96,17 +96,17 @@ func _test_t1_enemy_archetype_scenes_load(tree: SceneTree, h: RefCounted) -> voi
 
 func _test_t1_enemy_hitbox_and_fsm_transitions(tree: SceneTree, h: RefCounted) -> void:
 	h.begin_test("T1_M3_enemy_hitbox_contract_and_fsm")
-	var hb_script := h.load_script_safe("res://scripts/combat/EnemyHitbox.gd")
-	var enemy_script := h.load_script_safe("res://scripts/combat/EnemyBase.gd")
+	var hb_script = h.load_script_safe("res://scripts/combat/EnemyHitbox.gd")
+	var enemy_script = h.load_script_safe("res://scripts/combat/EnemyBase.gd")
 	if not h.assert_not_null(hb_script, "EnemyHitbox.gd required") or not h.assert_not_null(enemy_script, "EnemyBase.gd required"):
 		h.end_test()
 		return
-	var enemy := CharacterBody3D.new()
+	var enemy = CharacterBody3D.new()
 	enemy.set_script(enemy_script)
 	if "hp" in enemy and "max_hp" in enemy:
 		enemy.set("max_hp", 30)
 		enemy.set("hp", 30)
-	var hb := Area3D.new()
+	var hb = Area3D.new()
 	hb.set_script(hb_script)
 	h.assert_true("evasion" in hb, "EnemyHitbox must have evasion")
 	h.assert_true("enemy_id" in hb, "EnemyHitbox must have enemy_id")
@@ -122,18 +122,18 @@ func _test_t1_enemy_hitbox_and_fsm_transitions(tree: SceneTree, h: RefCounted) -
 
 func _test_t1_breakable_crate_exists(tree: SceneTree, h: RefCounted) -> void:
 	h.begin_test("T1_M3_breakable_crate_script")
-	var crate_script := h.load_script_safe("res://scripts/combat/BreakableCrate.gd")
+	var crate_script = h.load_script_safe("res://scripts/combat/BreakableCrate.gd")
 	h.assert_not_null(crate_script, "BreakableCrate.gd must exist")
 	h.end_test()
 
 
 func _test_t2_blaster_hit_chance_clamped_5_to_95(tree: SceneTree, h: RefCounted) -> void:
 	h.begin_test("T2_M3_blaster_hit_chance_clamped_5_to_95")
-	var pc_script := h.load_script_safe("res://scripts/player/PlayerController.gd")
+	var pc_script = h.load_script_safe("res://scripts/player/PlayerController.gd")
 	if not h.assert_not_null(pc_script, "PlayerController.gd required"):
 		h.end_test()
 		return
-	var pc := CharacterBody3D.new()
+	var pc = CharacterBody3D.new()
 	pc.set_script(pc_script)
 	if pc.has_method("calculate_blaster_hit_chance"):
 		var max_c: float = pc.calculate_blaster_hit_chance(150.0, 50, 0.0, 0.0)
@@ -147,11 +147,11 @@ func _test_t2_blaster_hit_chance_clamped_5_to_95(tree: SceneTree, h: RefCounted)
 func _test_t2_blaster_overheat_and_zero_power_cells(tree: SceneTree, h: RefCounted) -> void:
 	h.begin_test("T2_M3_blaster_overheat_and_zero_power_cells")
 	h.reset_singletons(tree)
-	var pc_script := h.load_script_safe("res://scripts/player/PlayerController.gd")
+	var pc_script = h.load_script_safe("res://scripts/player/PlayerController.gd")
 	if not h.assert_not_null(pc_script, "PlayerController.gd required"):
 		h.end_test()
 		return
-	var pc := CharacterBody3D.new()
+	var pc = CharacterBody3D.new()
 	pc.set_script(pc_script)
 	tree.root.add_child(pc)
 	if h.assert_true(pc.has_method("reload_power_cell"), "PlayerController must expose reload_power_cell()"):
@@ -170,11 +170,11 @@ func _test_t2_blaster_overheat_and_zero_power_cells(tree: SceneTree, h: RefCount
 
 func _test_t2_enemy_dead_state_ignores_damage(tree: SceneTree, h: RefCounted) -> void:
 	h.begin_test("T2_M3_dead_enemy_ignores_further_damage")
-	var enemy_script := h.load_script_safe("res://scripts/combat/EnemyBase.gd")
+	var enemy_script = h.load_script_safe("res://scripts/combat/EnemyBase.gd")
 	if not h.assert_not_null(enemy_script, "EnemyBase.gd required"):
 		h.end_test()
 		return
-	var enemy := CharacterBody3D.new()
+	var enemy = CharacterBody3D.new()
 	enemy.set_script(enemy_script)
 	if "hp" in enemy:
 		enemy.set("hp", 0)
@@ -189,11 +189,11 @@ func _test_t2_enemy_dead_state_ignores_damage(tree: SceneTree, h: RefCounted) ->
 
 func _test_t2_melee_drag_below_threshold(tree: SceneTree, h: RefCounted) -> void:
 	h.begin_test("T2_M3_melee_drag_below_threshold_none")
-	var pc_script := h.load_script_safe("res://scripts/player/PlayerController.gd")
+	var pc_script = h.load_script_safe("res://scripts/player/PlayerController.gd")
 	if not h.assert_not_null(pc_script, "PlayerController.gd required"):
 		h.end_test()
 		return
-	var pc := CharacterBody3D.new()
+	var pc = CharacterBody3D.new()
 	pc.set_script(pc_script)
 	if pc.has_method("get_melee_swing_modifiers"):
 		var tiny: Dictionary = pc.get_melee_swing_modifiers(Vector2(1, 1))

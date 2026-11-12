@@ -15,14 +15,14 @@ func run(tree: SceneTree, h: RefCounted) -> void:
 func _test_t3_servo_grip_mag_tumbler_sense_and_guile_lockpick(tree: SceneTree, h: RefCounted) -> void:
 	h.begin_test("T3_servo_grip_plus_mag_tumbler_sense_plus_guile_lockpick")
 	h.reset_singletons(tree)
-	var ps := h.get_autoload(tree, "PlayerStats")
-	var lp_packed := h.load_scene_safe("res://scenes/ui/LockpickMinigame.tscn")
-	var item_script := h.load_script_safe("res://scripts/resources/ItemData.gd")
+	var ps = h.get_autoload(tree, "PlayerStats")
+	var lp_packed = h.load_scene_safe("res://scenes/ui/LockpickMinigame.tscn")
+	var item_script = h.load_script_safe("res://scripts/resources/ItemData.gd")
 	if not h.assert_not_null(ps, "PlayerStats required") or not h.assert_not_null(lp_packed, "LockpickMinigame.tscn required"):
 		h.end_test()
 		return
 
-	var lp_base := lp_packed.instantiate()
+	var lp_base = lp_packed.instantiate()
 	tree.root.add_child(lp_base)
 	if h.assert_true(lp_base.has_method("get_effective_tolerance"), "LockpickMinigame must expose get_effective_tolerance()"):
 		var base_tol: float = lp_base.get_effective_tolerance()
@@ -46,8 +46,8 @@ func _test_t3_servo_grip_mag_tumbler_sense_and_guile_lockpick(tree: SceneTree, h
 func _test_t3_scrap_shielding_with_torso_locational_hit(tree: SceneTree, h: RefCounted) -> void:
 	h.begin_test("T3_scrap_shielding_plus_torso_locational_hit")
 	h.reset_singletons(tree)
-	var ps := h.get_autoload(tree, "PlayerStats")
-	var item_script := h.load_script_safe("res://scripts/resources/ItemData.gd")
+	var ps = h.get_autoload(tree, "PlayerStats")
+	var item_script = h.load_script_safe("res://scripts/resources/ItemData.gd")
 	if not h.assert_not_null(ps, "PlayerStats required") or not h.assert_not_null(item_script, "ItemData.gd required"):
 		h.end_test()
 		return
@@ -71,9 +71,9 @@ func _test_t3_scrap_shielding_with_torso_locational_hit(tree: SceneTree, h: RefC
 func _test_t3_cell_recycler_power_cell_reload(tree: SceneTree, h: RefCounted) -> void:
 	h.begin_test("T3_cell_recycler_blaster_reload_preservation")
 	h.reset_singletons(tree)
-	var ps := h.get_autoload(tree, "PlayerStats")
-	var pc_script := h.load_script_safe("res://scripts/player/PlayerController.gd")
-	var item_script := h.load_script_safe("res://scripts/resources/ItemData.gd")
+	var ps = h.get_autoload(tree, "PlayerStats")
+	var pc_script = h.load_script_safe("res://scripts/player/PlayerController.gd")
+	var item_script = h.load_script_safe("res://scripts/resources/ItemData.gd")
 	if not h.assert_not_null(ps, "PlayerStats required") or not h.assert_not_null(pc_script, "PlayerController.gd required"):
 		h.end_test()
 		return
@@ -84,7 +84,7 @@ func _test_t3_cell_recycler_power_cell_reload(tree: SceneTree, h: RefCounted) ->
 			var cell: Resource = item_script.new()
 			cell.set("id", "power_cell")
 			ps.backpack_items.append(cell)
-	var pc := CharacterBody3D.new()
+	var pc = CharacterBody3D.new()
 	pc.set_script(pc_script)
 	tree.root.add_child(pc)
 	if h.assert_true(pc.has_method("reload_power_cell"), "PlayerController must expose reload_power_cell()"):
@@ -101,12 +101,12 @@ func _test_t3_cell_recycler_power_cell_reload(tree: SceneTree, h: RefCounted) ->
 func _test_t3_turret_override_in_room6(tree: SceneTree, h: RefCounted) -> void:
 	h.begin_test("T3_turret_override_in_room6")
 	h.reset_singletons(tree)
-	var ps := h.get_autoload(tree, "PlayerStats")
-	var turret_packed := h.load_scene_safe("res://scenes/enemies/SentryTurret.tscn")
+	var ps = h.get_autoload(tree, "PlayerStats")
+	var turret_packed = h.load_scene_safe("res://scenes/enemies/SentryTurret.tscn")
 	if not h.assert_not_null(ps, "PlayerStats required") or not h.assert_not_null(turret_packed, "SentryTurret.tscn required"):
 		h.end_test()
 		return
-	var turret := turret_packed.instantiate()
+	var turret = turret_packed.instantiate()
 	tree.root.add_child(turret)
 	ps.unlocked_skills.append("turret_override")
 	if h.assert_true(turret.has_method("try_override"), "SentryTurret must expose try_override()"):
@@ -123,13 +123,13 @@ func _test_t3_turret_override_in_room6(tree: SceneTree, h: RefCounted) -> void:
 func _test_t3_room4_paths_abc_to_room5_drone_alert(tree: SceneTree, h: RefCounted) -> void:
 	h.begin_test("T3_room4_paths_abc_room5_drone_alert")
 	h.reset_singletons(tree)
-	var gs := h.get_autoload(tree, "GameState")
-	var jb_script := h.load_script_safe("res://scripts/world/JunctionBox.gd")
+	var gs = h.get_autoload(tree, "GameState")
+	var jb_script = h.load_script_safe("res://scripts/world/JunctionBox.gd")
 	if not h.assert_not_null(gs, "GameState required") or not h.assert_not_null(jb_script, "JunctionBox.gd required"):
 		h.end_test()
 		return
 	# Path C: blasting JunctionBox opens door AND alerts Room 5 drones
-	var jb := StaticBody3D.new()
+	var jb = StaticBody3D.new()
 	jb.set_script(jb_script)
 	tree.root.add_child(jb)
 	if h.assert_true(jb.has_method("blast_open"), "JunctionBox must expose blast_open()"):
@@ -144,12 +144,12 @@ func _test_t3_room4_paths_abc_to_room5_drone_alert(tree: SceneTree, h: RefCounte
 func _test_t3_miners_cant_in_dialogue(tree: SceneTree, h: RefCounted) -> void:
 	h.begin_test("T3_miners_cant_unlocks_union_dialogue")
 	h.reset_singletons(tree)
-	var ps := h.get_autoload(tree, "PlayerStats")
-	var dlg_packed := h.load_scene_safe("res://scenes/ui/DialogueUI.tscn")
+	var ps = h.get_autoload(tree, "PlayerStats")
+	var dlg_packed = h.load_scene_safe("res://scenes/ui/DialogueUI.tscn")
 	if not h.assert_not_null(ps, "PlayerStats required") or not h.assert_not_null(dlg_packed, "DialogueUI.tscn required"):
 		h.end_test()
 		return
-	var ui := dlg_packed.instantiate()
+	var ui = dlg_packed.instantiate()
 	tree.root.add_child(ui)
 	if h.assert_true(ui.has_method("check_topic_requirement"), "DialogueUI must expose check_topic_requirement()"):
 		h.assert_false(ui.check_topic_requirement({"required_skill": "miners_cant"}), "Topic must be locked without Miner's Cant")
@@ -164,24 +164,24 @@ func _test_t3_miners_cant_in_dialogue(tree: SceneTree, h: RefCounted) -> void:
 func _test_t3_ambush_calibration_and_piston_strike(tree: SceneTree, h: RefCounted) -> void:
 	h.begin_test("T3_ambush_calibration_and_piston_strike")
 	h.reset_singletons(tree)
-	var ps := h.get_autoload(tree, "PlayerStats")
-	var pc_script := h.load_script_safe("res://scripts/player/PlayerController.gd")
-	var hb_script := h.load_script_safe("res://scripts/combat/EnemyHitbox.gd")
-	var enemy_script := h.load_script_safe("res://scripts/combat/EnemyBase.gd")
+	var ps = h.get_autoload(tree, "PlayerStats")
+	var pc_script = h.load_script_safe("res://scripts/player/PlayerController.gd")
+	var hb_script = h.load_script_safe("res://scripts/combat/EnemyHitbox.gd")
+	var enemy_script = h.load_script_safe("res://scripts/combat/EnemyBase.gd")
 	if not h.assert_not_null(ps, "PlayerStats required") or not h.assert_not_null(pc_script, "PlayerController.gd required") or not h.assert_not_null(hb_script, "EnemyHitbox.gd required") or not h.assert_not_null(enemy_script, "EnemyBase.gd required"):
 		h.end_test()
 		return
 	ps.unlocked_skills.append("ambush_calibration")
 	ps.unlocked_skills.append("piston_strike")
-	var pc := CharacterBody3D.new()
+	var pc = CharacterBody3D.new()
 	pc.set_script(pc_script)
 	tree.root.add_child(pc)
-	var enemy := CharacterBody3D.new()
+	var enemy = CharacterBody3D.new()
 	enemy.set_script(enemy_script)
 	if "max_hp" in enemy and "hp" in enemy:
 		enemy.set("max_hp", 100)
 		enemy.set("hp", 100)
-	var hb := Area3D.new()
+	var hb = Area3D.new()
 	hb.set_script(hb_script)
 	hb.is_unaware = true
 	enemy.add_child(hb)

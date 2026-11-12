@@ -58,6 +58,19 @@ jobs:
       - name: Import project resources
         run: /tmp/godot/godot --headless --import --quit
 
+      - name: Run Godot headless test suite
+        run: /tmp/godot/godot --headless --path . --script res://tests/run_tests.gd --quit
+
+      - name: Run automated playtest & capture screenshots
+        run: GODOT_BIN=/tmp/godot/godot python3 tests/run_playtest.py --shots build/playtest_shots
+
+      - name: Upload playtest screenshots
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: playtest-screenshots
+          path: build/playtest_shots
+
       - name: Export Web build
         run: |
           mkdir -p build/web
