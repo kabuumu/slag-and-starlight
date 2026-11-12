@@ -1,0 +1,50 @@
+[gd_scene load_steps=6 format=3]
+
+[ext_resource type="Script" path="res://scripts/combat/EnemyBase.gd" id="1_enemy"]
+[ext_resource type="Script" path="res://scripts/visuals/Billboard8Dir.gd" id="2_bb"]
+[ext_resource type="Texture2D" path="res://assets/sprites/unit_734b.png" id="3_tex"]
+[ext_resource type="Script" path="res://scripts/combat/EnemyHitbox.gd" id="4_hb"]
+
+[sub_resource type="CapsuleShape3D" id="CapsuleShape3D_body"]
+radius = 0.7
+height = 2.4
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_hb"]
+size = Vector3(1.5, 2.3, 1.5)
+
+[node name="Unit734B" type="CharacterBody3D"]
+script = ExtResource("1_enemy")
+enemy_id = "unit_734b"
+display_name = "Unit 734-B (Excavation Mech)"
+max_hp = 180
+hp = 180
+evasion = 5
+attack_damage = 22
+attack_range = 6.0
+attack_cooldown = 1.6
+move_speed = 2.6
+detection_range = 20.0
+xp_reward = 250
+is_ranged = true
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.2, 0)
+shape = SubResource("CapsuleShape3D_body")
+
+[node name="Billboard8Dir" type="Sprite3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.25, 0)
+pixel_size = 0.055
+billboard = 2
+texture_filter = 0
+texture = ExtResource("3_tex")
+vframes = 8
+script = ExtResource("2_bb")
+
+[node name="EnemyHitbox" type="Area3D" parent="."]
+script = ExtResource("4_hb")
+evasion = 5
+enemy_id = "unit_734b"
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="EnemyHitbox"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.2, 0)
+shape = SubResource("BoxShape3D_hb")

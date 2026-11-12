@@ -1,0 +1,22 @@
+[gd_resource type="Resource" script_class="ItemData" load_steps=3 format=3]
+
+[ext_resource type="Script" path="res://scripts/resources/ItemData.gd" id="1_item"]
+[ext_resource type="Texture2D" path="res://assets/ui/icon_blackbox.png" id="2_icon"]
+
+[resource]
+script = ExtResource("1_item")
+id = "hacking_deck"
+name = "Hacking Deck"
+icon = ExtResource("2_icon")
+paper_doll_sprite = ExtResource("2_icon")
+slot_type = 7
+weight = 1.0
+armor_rating = 0
+damage_range = Vector2i(0, 0)
+durability = 100
+max_durability = 100
+description = "Portable corporate subnet intrusion deck."
+value_credits = 75
+is_consumable = false
+heal_amount = 0
+lockpick_bonus = 0.0

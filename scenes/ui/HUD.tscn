@@ -1,0 +1,129 @@
+[gd_scene load_steps=3 format=3]
+
+[ext_resource type="Script" path="res://scripts/ui/HUD.gd" id="1_hud"]
+[ext_resource type="Script" path="res://scripts/player/WeaponView2D.gd" id="2_weapon"]
+
+[node name="HUD" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+script = ExtResource("1_hud")
+
+[node name="StatusPanel" type="PanelContainer" parent="."]
+layout_mode = 1
+anchors_preset = 2
+anchor_top = 1.0
+anchor_bottom = 1.0
+offset_left = 16.0
+offset_top = -124.0
+offset_right = 300.0
+offset_bottom = -16.0
+grow_vertical = 0
+mouse_filter = 2
+
+[node name="VBox" type="VBoxContainer" parent="StatusPanel"]
+layout_mode = 2
+mouse_filter = 2
+
+[node name="HPRow" type="HBoxContainer" parent="StatusPanel/VBox"]
+layout_mode = 2
+mouse_filter = 2
+
+[node name="HPLabel" type="Label" parent="StatusPanel/VBox/HPRow"]
+custom_minimum_size = Vector2(56, 0)
+layout_mode = 2
+text = "HP"
+
+[node name="HPBar" type="ProgressBar" parent="StatusPanel/VBox/HPRow"]
+custom_minimum_size = Vector2(140, 18)
+layout_mode = 2
+size_flags_horizontal = 3
+value = 100.0
+show_percentage = false
+
+[node name="HPValue" type="Label" parent="StatusPanel/VBox/HPRow"]
+custom_minimum_size = Vector2(60, 0)
+layout_mode = 2
+text = "100/100"
+
+[node name="HeatRow" type="HBoxContainer" parent="StatusPanel/VBox"]
+layout_mode = 2
+mouse_filter = 2
+
+[node name="HeatLabel" type="Label" parent="StatusPanel/VBox/HeatRow"]
+custom_minimum_size = Vector2(56, 0)
+layout_mode = 2
+text = "HEAT"
+
+[node name="HeatBar" type="ProgressBar" parent="StatusPanel/VBox/HeatRow"]
+custom_minimum_size = Vector2(140, 18)
+layout_mode = 2
+size_flags_horizontal = 3
+value = 0.0
+show_percentage = false
+
+[node name="HeatValue" type="Label" parent="StatusPanel/VBox/HeatRow"]
+custom_minimum_size = Vector2(60, 0)
+layout_mode = 2
+text = "0%"
+
+[node name="SuitRow" type="HBoxContainer" parent="StatusPanel/VBox"]
+layout_mode = 2
+mouse_filter = 2
+
+[node name="SuitLabel" type="Label" parent="StatusPanel/VBox/SuitRow"]
+custom_minimum_size = Vector2(56, 0)
+layout_mode = 2
+text = "SUIT"
+
+[node name="SuitBar" type="ProgressBar" parent="StatusPanel/VBox/SuitRow"]
+custom_minimum_size = Vector2(140, 18)
+layout_mode = 2
+size_flags_horizontal = 3
+value = 100.0
+show_percentage = false
+
+[node name="SuitValue" type="Label" parent="StatusPanel/VBox/SuitRow"]
+custom_minimum_size = Vector2(60, 0)
+layout_mode = 2
+text = "100/100"
+
+[node name="CombatLogPanel" type="PanelContainer" parent="."]
+layout_mode = 1
+offset_left = 16.0
+offset_top = 16.0
+offset_right = 440.0
+offset_bottom = 148.0
+mouse_filter = 2
+
+[node name="Margin" type="MarginContainer" parent="CombatLogPanel"]
+layout_mode = 2
+mouse_filter = 2
+
+[node name="CombatLogLabel" type="RichTextLabel" parent="CombatLogPanel/Margin"]
+layout_mode = 2
+mouse_filter = 2
+fit_content = false
+scroll_following = true
+text = "Sub-Level 04 Combat Telemetry Online."
+
+[node name="WeaponAnchor" type="Control" parent="."]
+layout_mode = 1
+anchors_preset = 3
+anchor_left = 1.0
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 0
+grow_vertical = 0
+mouse_filter = 2
+
+[node name="WeaponView2D" type="AnimatedSprite2D" parent="WeaponAnchor"]
+position = Vector2(-140, -120)
+scale = Vector2(3.5, 3.5)
+script = ExtResource("2_weapon")
+base_position = Vector2(-140, -120)

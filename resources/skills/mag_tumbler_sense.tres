@@ -1,0 +1,13 @@
+[gd_resource type="Resource" script_class="SkillResource" load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://scripts/resources/SkillResource.gd" id="1_skill"]
+
+[resource]
+script = ExtResource("1_skill")
+id = "mag_tumbler_sense"
+display_name = "Mag-Tumbler Sense"
+description = "Widens the sweet spot in Lockpicking by 25%."
+branch = "Tunnel-Rat"
+cost = 1
+prerequisites = Array[ExtResource("1_skill")]([])
+tier = 1

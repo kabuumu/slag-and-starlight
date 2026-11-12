@@ -1,0 +1,508 @@
+[gd_scene load_steps=26 format=3]
+
+[ext_resource type="Texture2D" path="res://assets/textures/floor_grate.png" id="1_floor"]
+[ext_resource type="Texture2D" path="res://assets/textures/wall_rust.png" id="2_wall"]
+[ext_resource type="Texture2D" path="res://assets/textures/ceiling_pipe.png" id="3_ceil"]
+[ext_resource type="Texture2D" path="res://assets/textures/crate_supply.png" id="4_crate"]
+[ext_resource type="Texture2D" path="res://assets/textures/door_blast.png" id="5_door"]
+[ext_resource type="Texture2D" path="res://assets/textures/vent_grate.png" id="6_vent"]
+[ext_resource type="Texture2D" path="res://assets/textures/catwalk_metal.png" id="7_catwalk"]
+[ext_resource type="Texture2D" path="res://assets/sprites/kael_npc.png" id="8_kael"]
+[ext_resource type="Texture2D" path="res://assets/sprites/pickup_item.png" id="9_pickup"]
+[ext_resource type="Script" path="res://scripts/world/Interactable.gd" id="10_interact"]
+[ext_resource type="Script" path="res://scripts/world/BlastDoor.gd" id="11_blastdoor"]
+[ext_resource type="Script" path="res://scripts/world/JunctionBox.gd" id="12_jbox"]
+[ext_resource type="Script" path="res://scripts/world/CargoLift.gd" id="13_lift"]
+[ext_resource type="Script" path="res://scripts/combat/BreakableCrate.gd" id="14_crate_sc"]
+[ext_resource type="Script" path="res://scripts/visuals/Billboard8Dir.gd" id="15_billboard"]
+[ext_resource type="Resource" path="res://resources/dialogue/kael_dialogue.tres" id="16_kael_dlg"]
+[ext_resource type="PackedScene" path="res://scenes/enemies/SlagTick.tscn" id="17_tick"]
+[ext_resource type="PackedScene" path="res://scenes/enemies/MiningDrone.tscn" id="18_drone"]
+[ext_resource type="PackedScene" path="res://scenes/enemies/FeralDriller.tscn" id="19_driller"]
+[ext_resource type="PackedScene" path="res://scenes/enemies/SentryTurret.tscn" id="20_turret"]
+[ext_resource type="PackedScene" path="res://scenes/enemies/Unit734B.tscn" id="21_boss"]
+
+[sub_resource type="StandardMaterial3D" id="Mat_floor"]
+shading_mode = 2
+albedo_texture = ExtResource("1_floor")
+roughness = 1.0
+uv1_scale = Vector3(0.5, 0.5, 0.5)
+uv1_triplanar = true
+texture_filter = 0
+
+[sub_resource type="StandardMaterial3D" id="Mat_wall"]
+shading_mode = 2
+albedo_texture = ExtResource("2_wall")
+roughness = 1.0
+uv1_scale = Vector3(0.5, 0.5, 0.5)
+uv1_triplanar = true
+texture_filter = 0
+
+[sub_resource type="StandardMaterial3D" id="Mat_ceil"]
+shading_mode = 2
+albedo_texture = ExtResource("3_ceil")
+roughness = 1.0
+uv1_scale = Vector3(0.5, 0.5, 0.5)
+uv1_triplanar = true
+texture_filter = 0
+
+[sub_resource type="StandardMaterial3D" id="Mat_crate"]
+shading_mode = 2
+albedo_texture = ExtResource("4_crate")
+roughness = 1.0
+texture_filter = 0
+
+[sub_resource type="StandardMaterial3D" id="Mat_door"]
+shading_mode = 2
+albedo_texture = ExtResource("5_door")
+roughness = 1.0
+texture_filter = 0
+
+[sub_resource type="StandardMaterial3D" id="Mat_vent"]
+shading_mode = 2
+albedo_texture = ExtResource("6_vent")
+roughness = 1.0
+texture_filter = 0
+
+[sub_resource type="StandardMaterial3D" id="Mat_catwalk"]
+shading_mode = 2
+albedo_texture = ExtResource("7_catwalk")
+roughness = 1.0
+texture_filter = 0
+
+[sub_resource type="BoxMesh" id="Mesh_spine_floor"]
+material = SubResource("Mat_floor")
+size = Vector3(14, 0.2, 88)
+
+[sub_resource type="BoxShape3D" id="Shape_spine_floor"]
+size = Vector3(14, 0.2, 88)
+
+[sub_resource type="BoxMesh" id="Mesh_spine_ceil"]
+material = SubResource("Mat_ceil")
+size = Vector3(14, 0.2, 88)
+
+[sub_resource type="BoxMesh" id="Mesh_side_wall"]
+material = SubResource("Mat_wall")
+size = Vector3(0.4, 4.5, 88)
+
+[sub_resource type="BoxShape3D" id="Shape_side_wall"]
+size = Vector3(0.4, 4.5, 88)
+
+[sub_resource type="BoxMesh" id="Mesh_end_wall"]
+material = SubResource("Mat_wall")
+size = Vector3(14, 4.5, 0.4)
+
+[sub_resource type="BoxShape3D" id="Shape_end_wall"]
+size = Vector3(14, 4.5, 0.4)
+
+[sub_resource type="BoxMesh" id="Mesh_locker"]
+material = SubResource("Mat_catwalk")
+size = Vector3(1.2, 1.8, 0.8)
+
+[sub_resource type="BoxShape3D" id="Shape_locker"]
+size = Vector3(1.2, 1.8, 0.8)
+
+[sub_resource type="BoxMesh" id="Mesh_crate"]
+material = SubResource("Mat_crate")
+size = Vector3(1.0, 1.0, 1.0)
+
+[sub_resource type="BoxShape3D" id="Shape_crate"]
+size = Vector3(1.0, 1.0, 1.0)
+
+[sub_resource type="BoxMesh" id="Mesh_blastdoor"]
+material = SubResource("Mat_door")
+size = Vector3(4.0, 3.2, 0.4)
+
+[sub_resource type="BoxShape3D" id="Shape_blastdoor"]
+size = Vector3(4.0, 3.2, 0.4)
+
+[sub_resource type="BoxMesh" id="Mesh_blast_flank"]
+material = SubResource("Mat_wall")
+size = Vector3(5.0, 4.5, 0.4)
+
+[sub_resource type="BoxShape3D" id="Shape_blast_flank"]
+size = Vector3(5.0, 4.5, 0.4)
+
+[sub_resource type="BoxMesh" id="Mesh_vent"]
+material = SubResource("Mat_vent")
+size = Vector3(1.4, 1.2, 0.3)
+
+[sub_resource type="BoxShape3D" id="Shape_vent"]
+size = Vector3(1.4, 1.2, 0.3)
+
+[sub_resource type="BoxMesh" id="Mesh_terminal"]
+material = SubResource("Mat_catwalk")
+size = Vector3(0.9, 1.5, 0.5)
+
+[sub_resource type="BoxShape3D" id="Shape_terminal"]
+size = Vector3(0.9, 1.5, 0.5)
+
+[sub_resource type="BoxMesh" id="Mesh_catwalk"]
+material = SubResource("Mat_catwalk")
+size = Vector3(10.0, 0.2, 4.0)
+
+[sub_resource type="BoxShape3D" id="Shape_catwalk"]
+size = Vector3(10.0, 0.2, 4.0)
+
+[sub_resource type="BoxShape3D" id="Shape_npc"]
+size = Vector3(1.0, 1.8, 1.0)
+
+[sub_resource type="BoxShape3D" id="Shape_pickup"]
+size = Vector3(0.8, 0.8, 0.8)
+
+[node name="SubLevel04" type="Node3D"]
+
+[node name="PlayerSpawn" type="Marker3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.2, 2.5)
+
+[node name="Geometry" type="Node3D" parent="."]
+
+[node name="Floor" type="StaticBody3D" parent="Geometry"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.1, -38)
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="Geometry/Floor"]
+mesh = SubResource("Mesh_spine_floor")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Geometry/Floor"]
+shape = SubResource("Shape_spine_floor")
+
+[node name="Ceiling" type="StaticBody3D" parent="Geometry"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 4.5, -38)
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="Geometry/Ceiling"]
+mesh = SubResource("Mesh_spine_ceil")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Geometry/Ceiling"]
+shape = SubResource("Shape_spine_floor")
+
+[node name="WallWest" type="StaticBody3D" parent="Geometry"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -7.0, 2.25, -38)
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="Geometry/WallWest"]
+mesh = SubResource("Mesh_side_wall")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Geometry/WallWest"]
+shape = SubResource("Shape_side_wall")
+
+[node name="WallEast" type="StaticBody3D" parent="Geometry"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 7.0, 2.25, -38)
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="Geometry/WallEast"]
+mesh = SubResource("Mesh_side_wall")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Geometry/WallEast"]
+shape = SubResource("Shape_side_wall")
+
+[node name="WallSouth" type="StaticBody3D" parent="Geometry"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.25, 6.0)
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="Geometry/WallSouth"]
+mesh = SubResource("Mesh_end_wall")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Geometry/WallSouth"]
+shape = SubResource("Shape_end_wall")
+
+[node name="WallNorth" type="StaticBody3D" parent="Geometry"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.25, -82.0)
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="Geometry/WallNorth"]
+mesh = SubResource("Mesh_end_wall")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Geometry/WallNorth"]
+shape = SubResource("Shape_end_wall")
+
+[node name="Room1_Bunkhouse" type="Node3D" parent="."]
+
+[node name="Light1" type="OmniLight3D" parent="Room1_Bunkhouse"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 3.2, 0)
+light_color = Color(1, 0.72, 0.45, 1)
+light_energy = 1.6
+omni_range = 12.0
+
+[node name="BunkhouseLocker" type="StaticBody3D" parent="Room1_Bunkhouse"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -3.5, 0.9, 0)
+script = ExtResource("10_interact")
+interaction_type = "locker"
+prompt_text = "Open Bunkhouse Locker"
+item_paths = Array[String](["res://resources/items/scrappy_blaster.tres", "res://resources/items/hydro_spanner.tres", "res://resources/items/tattered_pressure_suit.tres", "res://resources/items/med_hypo.tres", "res://resources/items/mag_pick.tres"])
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="Room1_Bunkhouse/BunkhouseLocker"]
+mesh = SubResource("Mesh_locker")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Room1_Bunkhouse/BunkhouseLocker"]
+shape = SubResource("Shape_locker")
+
+[node name="Room2_Corridor" type="Node3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -12)
+
+[node name="Light2" type="OmniLight3D" parent="Room2_Corridor"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 3.2, 0)
+light_color = Color(1, 0.65, 0.4, 1)
+light_energy = 1.4
+omni_range = 12.0
+
+[node name="SlagTick1" parent="Room2_Corridor" instance=ExtResource("17_tick")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2.0, 0, 0)
+
+[node name="SlagTick2" parent="Room2_Corridor" instance=ExtResource("17_tick")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.0, 0, -1.5)
+
+[node name="BreakableCrate1" type="StaticBody3D" parent="Room2_Corridor"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4.0, 0.5, 1.0)
+script = ExtResource("14_crate_sc")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="Room2_Corridor/BreakableCrate1"]
+mesh = SubResource("Mesh_crate")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Room2_Corridor/BreakableCrate1"]
+shape = SubResource("Shape_crate")
+
+[node name="BreakableCrate2" type="StaticBody3D" parent="Room2_Corridor"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -4.0, 0.5, -2.0)
+script = ExtResource("14_crate_sc")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="Room2_Corridor/BreakableCrate2"]
+mesh = SubResource("Mesh_crate")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Room2_Corridor/BreakableCrate2"]
+shape = SubResource("Shape_crate")
+
+[node name="Room3_SecurityCheckpoint" type="Node3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -24)
+
+[node name="Light3" type="OmniLight3D" parent="Room3_SecurityCheckpoint"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 3.2, 0)
+light_color = Color(0.85, 0.9, 1.0, 1)
+light_energy = 1.5
+omni_range = 12.0
+
+[node name="KaelNPC" type="StaticBody3D" parent="Room3_SecurityCheckpoint"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -3.5, 0.9, 0)
+script = ExtResource("10_interact")
+interaction_type = "npc"
+prompt_text = "Talk to Kael"
+dialogue_data = ExtResource("16_kael_dlg")
+
+[node name="Sprite3D" type="Sprite3D" parent="Room3_SecurityCheckpoint/KaelNPC"]
+pixel_size = 0.03
+billboard = 2
+texture_filter = 0
+texture = ExtResource("8_kael")
+hframes = 4
+vframes = 8
+script = ExtResource("15_billboard")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Room3_SecurityCheckpoint/KaelNPC"]
+shape = SubResource("Shape_npc")
+
+[node name="Room4_HubJunction" type="Node3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -36)
+
+[node name="Light4" type="OmniLight3D" parent="Room4_HubJunction"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 3.2, 0)
+light_color = Color(1, 0.65, 0.35, 1)
+light_energy = 1.5
+omni_range = 12.0
+
+[node name="BlastDoor" type="StaticBody3D" parent="Room4_HubJunction"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.6, -4.0)
+script = ExtResource("11_blastdoor")
+unlock_target_id = "room4_wall_terminal"
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="Room4_HubJunction/BlastDoor"]
+mesh = SubResource("Mesh_blastdoor")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Room4_HubJunction/BlastDoor"]
+shape = SubResource("Shape_blastdoor")
+
+[node name="BlastWallWest" type="StaticBody3D" parent="Room4_HubJunction"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -4.5, 2.25, -4.0)
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="Room4_HubJunction/BlastWallWest"]
+mesh = SubResource("Mesh_blast_flank")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Room4_HubJunction/BlastWallWest"]
+shape = SubResource("Shape_blast_flank")
+
+[node name="BlastWallEast" type="StaticBody3D" parent="Room4_HubJunction"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4.5, 2.25, -4.0)
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="Room4_HubJunction/BlastWallEast"]
+mesh = SubResource("Mesh_blast_flank")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Room4_HubJunction/BlastWallEast"]
+shape = SubResource("Shape_blast_flank")
+
+[node name="MagLockVent" type="StaticBody3D" parent="Room4_HubJunction"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -4.5, 0.6, -3.8)
+script = ExtResource("10_interact")
+interaction_type = "minigame"
+prompt_text = "Pick Mag-Lock Vent (Easy)"
+target_id = "room4_mag_lock"
+minigame_type = "lockpick"
+difficulty = "easy"
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="Room4_HubJunction/MagLockVent"]
+mesh = SubResource("Mesh_vent")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Room4_HubJunction/MagLockVent"]
+shape = SubResource("Shape_vent")
+
+[node name="WallTerminal" type="StaticBody3D" parent="Room4_HubJunction"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 3.8, 0.75, -3.5)
+script = ExtResource("10_interact")
+interaction_type = "minigame"
+prompt_text = "Hack Wall Terminal (Easy)"
+target_id = "room4_wall_terminal"
+minigame_type = "hacking"
+difficulty = "easy"
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="Room4_HubJunction/WallTerminal"]
+mesh = SubResource("Mesh_terminal")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Room4_HubJunction/WallTerminal"]
+shape = SubResource("Shape_terminal")
+
+[node name="JunctionBox" type="StaticBody3D" parent="Room4_HubJunction"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 3.4, -3.7)
+script = ExtResource("12_jbox")
+linked_door_path = NodePath("../BlastDoor")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="Room4_HubJunction/JunctionBox"]
+mesh = SubResource("Mesh_crate")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Room4_HubJunction/JunctionBox"]
+shape = SubResource("Shape_crate")
+
+[node name="Room5_OreProcessingBay" type="Node3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -48)
+
+[node name="Light5" type="OmniLight3D" parent="Room5_OreProcessingBay"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 3.6, 0)
+light_color = Color(1, 0.75, 0.5, 1)
+light_energy = 1.7
+omni_range = 14.0
+
+[node name="UpperCatwalk" type="StaticBody3D" parent="Room5_OreProcessingBay"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.0, 0)
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="Room5_OreProcessingBay/UpperCatwalk"]
+mesh = SubResource("Mesh_catwalk")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Room5_OreProcessingBay/UpperCatwalk"]
+shape = SubResource("Shape_catwalk")
+
+[node name="MiningDrone1" parent="Room5_OreProcessingBay" groups=["room5_drones"] instance=ExtResource("18_drone")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2.5, 0, -1.0)
+
+[node name="MiningDrone2" parent="Room5_OreProcessingBay" groups=["room5_drones"] instance=ExtResource("18_drone")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.5, 0, -1.0)
+
+[node name="FeralDriller" parent="Room5_OreProcessingBay" instance=ExtResource("19_driller")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 1.5)
+
+[node name="DeadGuardLoot" type="StaticBody3D" parent="Room5_OreProcessingBay"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 3.5, 2.4, 0)
+script = ExtResource("10_interact")
+interaction_type = "pickup"
+prompt_text = "Loot Dead Guard (Servo-Grip Gauntlets)"
+item_paths = Array[String](["res://resources/items/servo_grip_gauntlets.tres", "res://resources/items/raw_ore.tres"])
+consume_on_use = true
+
+[node name="Sprite3D" type="Sprite3D" parent="Room5_OreProcessingBay/DeadGuardLoot"]
+pixel_size = 0.03
+billboard = 2
+texture_filter = 0
+texture = ExtResource("9_pickup")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Room5_OreProcessingBay/DeadGuardLoot"]
+shape = SubResource("Shape_pickup")
+
+[node name="Room6_OverseersOffice" type="Node3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -60)
+
+[node name="Light6" type="OmniLight3D" parent="Room6_OverseersOffice"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 3.2, 0)
+light_color = Color(0.8, 0.9, 1.0, 1)
+light_energy = 1.6
+omni_range = 12.0
+
+[node name="SentryTurret" parent="Room6_OverseersOffice" instance=ExtResource("20_turret")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 1.5)
+
+[node name="KeycardPickup" type="StaticBody3D" parent="Room6_OverseersOffice"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2.5, 0.6, -1.0)
+script = ExtResource("10_interact")
+interaction_type = "pickup"
+prompt_text = "Take Lift Override Keycard"
+item_paths = Array[String](["res://resources/items/lift_override_keycard.tres"])
+grant_flag = "has_lift_keycard"
+consume_on_use = true
+
+[node name="Sprite3D" type="Sprite3D" parent="Room6_OverseersOffice/KeycardPickup"]
+pixel_size = 0.03
+billboard = 2
+texture_filter = 0
+texture = ExtResource("9_pickup")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Room6_OverseersOffice/KeycardPickup"]
+shape = SubResource("Shape_pickup")
+
+[node name="OverseersMainframe" type="StaticBody3D" parent="Room6_OverseersOffice"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 3.0, 0.75, -1.5)
+script = ExtResource("10_interact")
+interaction_type = "minigame"
+prompt_text = "Hack Overseer's Mainframe (Medium)"
+target_id = "room6_overseer_mainframe"
+minigame_type = "hacking"
+difficulty = "medium"
+reward_item_path = "res://resources/items/seismic_blackbox.tres"
+reward_flag = "has_seismic_blackbox"
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="Room6_OverseersOffice/OverseersMainframe"]
+mesh = SubResource("Mesh_terminal")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Room6_OverseersOffice/OverseersMainframe"]
+shape = SubResource("Shape_terminal")
+
+[node name="Room7_MainCargoLift" type="Node3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -72)
+
+[node name="Light7" type="OmniLight3D" parent="Room7_MainCargoLift"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 3.5, 0)
+light_color = Color(1, 0.7, 0.45, 1)
+light_energy = 1.8
+omni_range = 14.0
+
+[node name="KaelReturnNPC" type="StaticBody3D" parent="Room7_MainCargoLift"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -4.0, 0.9, 2.0)
+script = ExtResource("10_interact")
+interaction_type = "npc"
+prompt_text = "Speak with Kael"
+dialogue_data = ExtResource("16_kael_dlg")
+
+[node name="Sprite3D" type="Sprite3D" parent="Room7_MainCargoLift/KaelReturnNPC"]
+pixel_size = 0.03
+billboard = 2
+texture_filter = 0
+texture = ExtResource("8_kael")
+hframes = 4
+vframes = 8
+script = ExtResource("15_billboard")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Room7_MainCargoLift/KaelReturnNPC"]
+shape = SubResource("Shape_npc")
+
+[node name="Unit734B" parent="Room7_MainCargoLift" instance=ExtResource("21_boss")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -1.5)
+
+[node name="CargoLift" type="StaticBody3D" parent="Room7_MainCargoLift"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.75, -6.0)
+script = ExtResource("13_lift")
+next_scene_path = "res://scenes/levels/RustSpireOutpost.tscn"
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="Room7_MainCargoLift/CargoLift"]
+mesh = SubResource("Mesh_terminal")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Room7_MainCargoLift/CargoLift"]
+shape = SubResource("Shape_terminal")

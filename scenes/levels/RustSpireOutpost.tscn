@@ -1,0 +1,124 @@
+[gd_scene load_steps=16 format=3]
+
+[ext_resource type="Texture2D" path="res://assets/textures/rock_khoros.png" id="1_rock"]
+[ext_resource type="Texture2D" path="res://assets/textures/wall_rust.png" id="2_wall"]
+[ext_resource type="Texture2D" path="res://assets/textures/catwalk_metal.png" id="3_metal"]
+[ext_resource type="Texture2D" path="res://assets/sprites/player_placeholder.png" id="4_agent"]
+[ext_resource type="Script" path="res://scripts/world/Interactable.gd" id="5_interact"]
+[ext_resource type="Script" path="res://scripts/visuals/Billboard8Dir.gd" id="6_billboard"]
+[ext_resource type="Resource" path="res://resources/dialogue/corp_agent_dialogue.tres" id="7_corp_dlg"]
+
+[sub_resource type="StandardMaterial3D" id="Mat_ground"]
+shading_mode = 2
+albedo_texture = ExtResource("1_rock")
+roughness = 1.0
+uv1_scale = Vector3(0.5, 0.5, 0.5)
+uv1_triplanar = true
+texture_filter = 0
+
+[sub_resource type="StandardMaterial3D" id="Mat_wall"]
+shading_mode = 2
+albedo_texture = ExtResource("2_wall")
+roughness = 1.0
+uv1_scale = Vector3(0.5, 0.5, 0.5)
+uv1_triplanar = true
+texture_filter = 0
+
+[sub_resource type="StandardMaterial3D" id="Mat_terminal"]
+shading_mode = 2
+albedo_texture = ExtResource("3_metal")
+roughness = 1.0
+texture_filter = 0
+
+[sub_resource type="BoxMesh" id="Mesh_ground"]
+material = SubResource("Mat_ground")
+size = Vector3(24, 0.2, 24)
+
+[sub_resource type="BoxShape3D" id="Shape_ground"]
+size = Vector3(24, 0.2, 24)
+
+[sub_resource type="BoxMesh" id="Mesh_wall_ns"]
+material = SubResource("Mat_wall")
+size = Vector3(24, 4.0, 0.4)
+
+[sub_resource type="BoxShape3D" id="Shape_wall_ns"]
+size = Vector3(24, 4.0, 0.4)
+
+[sub_resource type="BoxMesh" id="Mesh_terminal"]
+material = SubResource("Mat_terminal")
+size = Vector3(1.0, 1.6, 0.6)
+
+[sub_resource type="BoxShape3D" id="Shape_terminal"]
+size = Vector3(1.0, 1.6, 0.6)
+
+[sub_resource type="BoxShape3D" id="Shape_npc"]
+size = Vector3(1.0, 1.8, 1.0)
+
+[node name="RustSpireOutpost" type="Node3D"]
+
+[node name="PlayerSpawn" type="Marker3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.2, 6.0)
+
+[node name="OmniLight3D" type="OmniLight3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 8.0, 0)
+light_color = Color(1, 0.78, 0.55, 1)
+light_energy = 2.2
+omni_range = 30.0
+
+[node name="Ground" type="StaticBody3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.1, 0)
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="Ground"]
+mesh = SubResource("Mesh_ground")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Ground"]
+shape = SubResource("Shape_ground")
+
+[node name="PerimeterNorth" type="StaticBody3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.0, -12.0)
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="PerimeterNorth"]
+mesh = SubResource("Mesh_wall_ns")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="PerimeterNorth"]
+shape = SubResource("Shape_wall_ns")
+
+[node name="PerimeterSouth" type="StaticBody3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.0, 12.0)
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="PerimeterSouth"]
+mesh = SubResource("Mesh_wall_ns")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="PerimeterSouth"]
+shape = SubResource("Shape_wall_ns")
+
+[node name="RadiantJobTerminal" type="StaticBody3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -3.5, 0.8, -3.0)
+script = ExtResource("5_interact")
+interaction_type = "radiant_terminal"
+prompt_text = "Access Radiant Job Terminal"
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="RadiantJobTerminal"]
+mesh = SubResource("Mesh_terminal")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="RadiantJobTerminal"]
+shape = SubResource("Shape_terminal")
+
+[node name="CorporateAgent" type="StaticBody3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 3.5, 0.9, -3.0)
+script = ExtResource("5_interact")
+interaction_type = "npc"
+prompt_text = "Speak with Corporate Agent"
+dialogue_data = ExtResource("7_corp_dlg")
+
+[node name="Sprite3D" type="Sprite3D" parent="CorporateAgent"]
+pixel_size = 0.03
+billboard = 2
+texture_filter = 0
+texture = ExtResource("4_agent")
+hframes = 4
+vframes = 8
+script = ExtResource("6_billboard")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="CorporateAgent"]
+shape = SubResource("Shape_npc")

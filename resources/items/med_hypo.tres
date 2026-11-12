@@ -1,0 +1,21 @@
+[gd_resource type="Resource" script_class="ItemData" load_steps=3 format=3]
+
+[ext_resource type="Script" path="res://scripts/resources/ItemData.gd" id="1_item"]
+[ext_resource type="Texture2D" path="res://assets/ui/icon_medhypo.png" id="2_icon"]
+
+[resource]
+script = ExtResource("1_item")
+id = "med_hypo"
+name = "Med-Hypo"
+icon = ExtResource("2_icon")
+slot_type = 0
+weight = 0.3
+armor_rating = 0
+damage_range = Vector2i(0, 0)
+durability = 1
+max_durability = 1
+description = "Single-use pressurized trauma injector. Restores 35 HP."
+value_credits = 25
+is_consumable = true
+heal_amount = 35
+lockpick_bonus = 0.0

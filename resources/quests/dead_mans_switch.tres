@@ -1,0 +1,60 @@
+[gd_resource type="Resource" script_class="QuestResource" load_steps=7 format=3]
+
+[ext_resource type="Script" path="res://scripts/resources/QuestResource.gd" id="1_quest"]
+[ext_resource type="Script" path="res://scripts/resources/QuestStage.gd" id="2_stage"]
+
+[sub_resource type="Resource" id="Stage_1_talk"]
+script = ExtResource("2_stage")
+stage_id = "talk_kael"
+journal_text = "Speak with Kael at the Security Checkpoint in Room 3 to learn why Sub-Level 04 is locked down."
+objective_type = 3
+target_id = "kael"
+is_optional = false
+is_completed = false
+xp_reward = 25
+credit_reward = 0
+
+[sub_resource type="Resource" id="Stage_2_fetch"]
+script = ExtResource("2_stage")
+stage_id = "fetch_keycard"
+journal_text = "Retrieve the Lift Override Keycard from Overseer Vos's Office (Room 6)."
+objective_type = 1
+target_id = "lift_override_keycard"
+is_optional = false
+is_completed = false
+xp_reward = 60
+credit_reward = 25
+
+[sub_resource type="Resource" id="Stage_3_hack"]
+script = ExtResource("2_stage")
+stage_id = "hack_mainframe"
+journal_text = "Optional: Hack the Overseer's Mainframe to download the Seismic Blackbox telemetry logs."
+objective_type = 2
+target_id = "room6_overseer_mainframe"
+is_optional = true
+is_completed = false
+xp_reward = 75
+credit_reward = 0
+
+[sub_resource type="Resource" id="Stage_4_kill"]
+script = ExtResource("2_stage")
+stage_id = "kill_unit_734b"
+journal_text = "Defeat Unit 734-B at the Main Cargo Lift (Room 7) and ride the lift to Rust-Spire Outpost."
+objective_type = 0
+target_id = "unit_734b"
+is_optional = false
+is_completed = false
+xp_reward = 150
+credit_reward = 100
+
+[resource]
+script = ExtResource("1_quest")
+quest_id = "dead_mans_switch"
+id = "dead_mans_switch"
+title = "Dead Man's Switch"
+description = "Escape Sub-Level 04: The Deep Bore by restoring power to the Main Cargo Lift and recovering the Lift Override Keycard."
+is_radiant = false
+stages = Array[ExtResource("2_stage")]([SubResource("Stage_1_talk"), SubResource("Stage_2_fetch"), SubResource("Stage_3_hack"), SubResource("Stage_4_kill")])
+current_stage_index = 0
+reward_xp = 200
+reward_credits = 100

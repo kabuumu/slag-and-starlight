@@ -1,0 +1,21 @@
+[gd_resource type="Resource" script_class="ItemData" load_steps=3 format=3]
+
+[ext_resource type="Script" path="res://scripts/resources/ItemData.gd" id="1_item"]
+[ext_resource type="Texture2D" path="res://assets/ui/icon_blaster.png" id="2_icon"]
+
+[resource]
+script = ExtResource("1_item")
+id = "modded_blaster_barrel"
+name = "Modded Blaster Barrel"
+icon = ExtResource("2_icon")
+slot_type = 7
+weight = 0.8
+armor_rating = 0
+damage_range = Vector2i(3, 5)
+durability = 100
+max_durability = 100
+description = "Precision-rifled plasma collimator rewarded by Kael (+10% Blaster Accuracy, +3 Blaster Damage)."
+value_credits = 120
+is_consumable = false
+heal_amount = 0
+lockpick_bonus = 0.0

@@ -1,0 +1,28 @@
+[gd_resource type="Resource" script_class="DialogueData" load_steps=3 format=3]
+
+[ext_resource type="Script" path="res://scripts/resources/DialogueData.gd" id="1_dlg"]
+[ext_resource type="Texture2D" path="res://assets/sprites/player_placeholder.png" id="2_portrait"]
+
+[resource]
+script = ExtResource("1_dlg")
+npc_id = "corp_agent"
+npc_name = "Vance (Khoros Corp Agent)"
+portrait_texture = ExtResource("2_portrait")
+greeting = "Welcome to Rust-Spire Outpost, driller. Didn't expect anyone walking off the Sub-Level 04 lift today. Khoros Corp is always interested in... salvaged company property."
+topics = Array[Dictionary]([{
+"label": "Rust-Spire Outpost",
+"response": "This dust-bowl is the only surface hub for fifty clicks. Check the Radiant Job Terminal if you want steady contract work—exterminating vermin or recovering lost hardware.",
+"topic_id": "rust_spire_outpost"
+}, {
+"action": "sell_blackbox",
+"forbidden_flag": "blackbox_given_to_kael",
+"label": "Sell Seismic Blackbox",
+"required_flag": "has_seismic_blackbox",
+"response": "Ah, Overseer Vos's seismic telemetry. Let's keep that off the public net, shall we? Transferring credits to your account now.",
+"topic_id": "sell_blackbox"
+}, {
+"action": "sell_raw_ore",
+"label": "Sell Raw Ore",
+"response": "Let's weigh whatever raw Khoros ore you hauled up from the bore. Market rate is 40 credits per chunk—more if you know how to appraise it.",
+"topic_id": "sell_raw_ore"
+}])

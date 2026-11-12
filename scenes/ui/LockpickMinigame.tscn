@@ -1,0 +1,108 @@
+[gd_scene load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://scripts/ui/LockpickMinigame.gd" id="1_lockpick"]
+
+[node name="LockpickMinigame" type="Control"]
+process_mode = 3
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_lockpick")
+
+[node name="Backdrop" type="ColorRect" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0.02, 0.05, 0.03, 0.85)
+
+[node name="CRTPanel" type="PanelContainer" parent="."]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -210.0
+offset_top = -150.0
+offset_right = 210.0
+offset_bottom = 150.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Margin" type="MarginContainer" parent="CRTPanel"]
+layout_mode = 2
+theme_override_constants/margin_left = 12
+theme_override_constants/margin_top = 10
+theme_override_constants/margin_right = 12
+theme_override_constants/margin_bottom = 10
+
+[node name="RootVBox" type="VBoxContainer" parent="CRTPanel/Margin"]
+layout_mode = 2
+theme_override_constants/separation = 8
+
+[node name="HeaderRow" type="HBoxContainer" parent="CRTPanel/Margin/RootVBox"]
+layout_mode = 2
+
+[node name="TitleLabel" type="Label" parent="CRTPanel/Margin/RootVBox/HeaderRow"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "MAG-TUMBLER LOCK // EASY"
+
+[node name="CloseButton" type="Button" parent="CRTPanel/Margin/RootVBox/HeaderRow"]
+layout_mode = 2
+text = "ABORT"
+
+[node name="StatusLabel" type="Label" parent="CRTPanel/Margin/RootVBox"]
+layout_mode = 2
+text = "LEFT/RIGHT: Select Cylinder | SPACE: Fire Pulse"
+horizontal_alignment = 1
+
+[node name="ShearFrame" type="Control" parent="CRTPanel/Margin/RootVBox"]
+custom_minimum_size = Vector2(380, 170)
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="ShearLine" type="ColorRect" parent="CRTPanel/Margin/RootVBox/ShearFrame"]
+layout_mode = 1
+anchors_preset = 14
+anchor_top = 0.5
+anchor_right = 1.0
+anchor_bottom = 0.5
+offset_top = -2.0
+offset_bottom = 2.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0.95, 0.35, 0.2, 0.85)
+
+[node name="CylinderContainer" type="HBoxContainer" parent="CRTPanel/Margin/RootVBox/ShearFrame"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/separation = 16
+alignment = 1
+
+[node name="TensionRow" type="HBoxContainer" parent="CRTPanel/Margin/RootVBox"]
+layout_mode = 2
+theme_override_constants/separation = 12
+
+[node name="TensionLabel" type="Label" parent="CRTPanel/Margin/RootVBox/TensionRow"]
+layout_mode = 2
+text = "TENSION"
+
+[node name="TensionBar" type="ProgressBar" parent="CRTPanel/Margin/RootVBox/TensionRow"]
+layout_mode = 2
+size_flags_horizontal = 3
+max_value = 100.0
+
+[node name="PickLabel" type="Label" parent="CRTPanel/Margin/RootVBox/TensionRow"]
+layout_mode = 2
+text = "MAG-PICK: 5/5"

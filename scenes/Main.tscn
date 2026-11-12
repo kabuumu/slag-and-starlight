@@ -1,0 +1,94 @@
+[gd_scene load_steps=13 format=3]
+
+[ext_resource type="Script" path="res://scripts/Main.gd" id="1_main"]
+[ext_resource type="PackedScene" path="res://scenes/levels/SubLevel04.tscn" id="2_level"]
+[ext_resource type="PackedScene" path="res://scenes/player/Player.tscn" id="3_player"]
+[ext_resource type="Shader" path="res://shaders/retro_quantize_fog.gdshader" id="4_shader"]
+[ext_resource type="PackedScene" path="res://scenes/ui/InventoryUI.tscn" id="5_inv"]
+[ext_resource type="PackedScene" path="res://scenes/ui/HUD.tscn" id="6_hud"]
+[ext_resource type="PackedScene" path="res://scenes/ui/SkillTreeUI.tscn" id="7_skill"]
+[ext_resource type="PackedScene" path="res://scenes/ui/LockpickMinigame.tscn" id="8_lockpick"]
+[ext_resource type="PackedScene" path="res://scenes/ui/HackingMinigame.tscn" id="9_hacking"]
+[ext_resource type="PackedScene" path="res://scenes/ui/DialogueUI.tscn" id="10_dialogue"]
+
+[sub_resource type="Environment" id="Environment_khoros"]
+background_mode = 1
+background_color = Color(0.14, 0.06, 0.04, 1)
+ambient_light_source = 2
+ambient_light_color = Color(0.38, 0.24, 0.18, 1)
+ambient_light_energy = 0.7
+fog_enabled = true
+fog_light_color = Color(0.24, 0.11, 0.06, 1)
+fog_density = 0.05
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_post"]
+shader = ExtResource("4_shader")
+shader_parameter/fog_tint = Color(0.24, 0.11, 0.06, 1)
+shader_parameter/fog_strength = 0.16
+shader_parameter/vignette_strength = 0.35
+shader_parameter/rust_warmth = 0.12
+
+[node name="Main" type="Node"]
+script = ExtResource("1_main")
+
+[node name="SubViewportContainer" type="SubViewportContainer" parent="."]
+texture_filter = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+stretch = true
+
+[node name="SubViewport" type="SubViewport" parent="SubViewportContainer"]
+handle_input_locally = false
+canvas_item_default_texture_filter = 0
+size = Vector2i(320, 200)
+render_target_update_mode = 4
+
+[node name="World3D" type="Node3D" parent="SubViewportContainer/SubViewport"]
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="SubViewportContainer/SubViewport/World3D"]
+environment = SubResource("Environment_khoros")
+
+[node name="DirectionalLight3D" type="DirectionalLight3D" parent="SubViewportContainer/SubViewport/World3D"]
+transform = Transform3D(0.866025, -0.353553, 0.353553, 0, 0.707107, 0.707107, -0.5, -0.612372, 0.612372, 0, 8, 0)
+light_color = Color(1, 0.8, 0.65, 1)
+light_energy = 0.8
+
+[node name="CurrentLevel" parent="SubViewportContainer/SubViewport/World3D" instance=ExtResource("2_level")]
+
+[node name="Player" parent="SubViewportContainer/SubViewport/World3D" instance=ExtResource("3_player")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.2, 2.5)
+
+[node name="PostProcessLayer" type="CanvasLayer" parent="."]
+layer = 1
+
+[node name="PostProcessRect" type="ColorRect" parent="PostProcessLayer"]
+material = SubResource("ShaderMaterial_post")
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+
+[node name="HUDLayer" type="CanvasLayer" parent="."]
+layer = 2
+
+[node name="HUD" parent="HUDLayer" instance=ExtResource("6_hud")]
+
+[node name="InventoryUI" parent="HUDLayer" instance=ExtResource("5_inv")]
+visible = false
+
+[node name="SkillTreeUI" parent="HUDLayer" instance=ExtResource("7_skill")]
+visible = false
+
+[node name="LockpickMinigame" parent="HUDLayer" instance=ExtResource("8_lockpick")]
+visible = false
+
+[node name="HackingMinigame" parent="HUDLayer" instance=ExtResource("9_hacking")]
+visible = false
+
+[node name="DialogueUI" parent="HUDLayer" instance=ExtResource("10_dialogue")]
+visible = false

@@ -1,0 +1,163 @@
+[gd_scene load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://scripts/ui/SkillTreeUI.gd" id="1_skill_ui"]
+
+[node name="SkillTreeUI" type="Control"]
+process_mode = 3
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_skill_ui")
+
+[node name="Backdrop" type="ColorRect" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0.05, 0.03, 0.03, 0.82)
+
+[node name="MainPanel" type="PanelContainer" parent="."]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -390.0
+offset_top = -220.0
+offset_right = 390.0
+offset_bottom = 220.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Margin" type="MarginContainer" parent="MainPanel"]
+layout_mode = 2
+theme_override_constants/margin_left = 12
+theme_override_constants/margin_top = 10
+theme_override_constants/margin_right = 12
+theme_override_constants/margin_bottom = 10
+
+[node name="RootVBox" type="VBoxContainer" parent="MainPanel/Margin"]
+layout_mode = 2
+theme_override_constants/separation = 8
+
+[node name="HeaderRow" type="HBoxContainer" parent="MainPanel/Margin/RootVBox"]
+layout_mode = 2
+theme_override_constants/separation = 12
+
+[node name="TitleLabel" type="Label" parent="MainPanel/Margin/RootVBox/HeaderRow"]
+layout_mode = 2
+text = "NEURAL IMPRINT // PROGRESSION"
+
+[node name="LevelLabel" type="Label" parent="MainPanel/Margin/RootVBox/HeaderRow"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "LVL 1 | XP: 0 / 100"
+horizontal_alignment = 1
+
+[node name="PointsLabel" type="Label" parent="MainPanel/Margin/RootVBox/HeaderRow"]
+layout_mode = 2
+text = "ATTR PTS: 0   SKILL PTS: 0"
+
+[node name="CloseButton" type="Button" parent="MainPanel/Margin/RootVBox/HeaderRow"]
+layout_mode = 2
+text = "X"
+
+[node name="AttributesRow" type="HBoxContainer" parent="MainPanel/Margin/RootVBox"]
+layout_mode = 2
+theme_override_constants/separation = 16
+alignment = 1
+
+[node name="GritBox" type="HBoxContainer" parent="MainPanel/Margin/RootVBox/AttributesRow"]
+layout_mode = 2
+theme_override_constants/separation = 4
+
+[node name="GritValue" type="Label" parent="MainPanel/Margin/RootVBox/AttributesRow/GritBox"]
+layout_mode = 2
+text = "GRIT: 5"
+
+[node name="GritAddBtn" type="Button" parent="MainPanel/Margin/RootVBox/AttributesRow/GritBox"]
+layout_mode = 2
+text = "+"
+
+[node name="ReflexBox" type="HBoxContainer" parent="MainPanel/Margin/RootVBox/AttributesRow"]
+layout_mode = 2
+theme_override_constants/separation = 4
+
+[node name="ReflexValue" type="Label" parent="MainPanel/Margin/RootVBox/AttributesRow/ReflexBox"]
+layout_mode = 2
+text = "REFLEX: 5"
+
+[node name="ReflexAddBtn" type="Button" parent="MainPanel/Margin/RootVBox/AttributesRow/ReflexBox"]
+layout_mode = 2
+text = "+"
+
+[node name="TechBox" type="HBoxContainer" parent="MainPanel/Margin/RootVBox/AttributesRow"]
+layout_mode = 2
+theme_override_constants/separation = 4
+
+[node name="TechValue" type="Label" parent="MainPanel/Margin/RootVBox/AttributesRow/TechBox"]
+layout_mode = 2
+text = "TECH: 5"
+
+[node name="TechAddBtn" type="Button" parent="MainPanel/Margin/RootVBox/AttributesRow/TechBox"]
+layout_mode = 2
+text = "+"
+
+[node name="GuileBox" type="HBoxContainer" parent="MainPanel/Margin/RootVBox/AttributesRow"]
+layout_mode = 2
+theme_override_constants/separation = 4
+
+[node name="GuileValue" type="Label" parent="MainPanel/Margin/RootVBox/AttributesRow/GuileBox"]
+layout_mode = 2
+text = "GUILE: 5"
+
+[node name="GuileAddBtn" type="Button" parent="MainPanel/Margin/RootVBox/AttributesRow/GuileBox"]
+layout_mode = 2
+text = "+"
+
+[node name="BranchHeaders" type="HBoxContainer" parent="MainPanel/Margin/RootVBox"]
+layout_mode = 2
+alignment = 1
+
+[node name="VoidScrapperLabel" type="Label" parent="MainPanel/Margin/RootVBox/BranchHeaders"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "VOID-SCRAPPER"
+horizontal_alignment = 1
+
+[node name="CyberSplicerLabel" type="Label" parent="MainPanel/Margin/RootVBox/BranchHeaders"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "CYBER-SPLICER"
+horizontal_alignment = 1
+
+[node name="TunnelRatLabel" type="Label" parent="MainPanel/Margin/RootVBox/BranchHeaders"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "TUNNEL-RAT"
+horizontal_alignment = 1
+
+[node name="TreeCanvas" type="Control" parent="MainPanel/Margin/RootVBox"]
+custom_minimum_size = Vector2(756, 225)
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="FooterRow" type="HBoxContainer" parent="MainPanel/Margin/RootVBox"]
+layout_mode = 2
+theme_override_constants/separation = 8
+
+[node name="DetailLabel" type="Label" parent="MainPanel/Margin/RootVBox/FooterRow"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "Select a skill node to unlock or inspect."
+
+[node name="NanoRepairButton" type="Button" parent="MainPanel/Margin/RootVBox/FooterRow"]
+visible = false
+layout_mode = 2
+text = "Field Nano-Repair"

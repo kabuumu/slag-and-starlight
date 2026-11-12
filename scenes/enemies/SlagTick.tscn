@@ -1,0 +1,49 @@
+[gd_scene load_steps=6 format=3]
+
+[ext_resource type="Script" path="res://scripts/combat/EnemyBase.gd" id="1_enemy"]
+[ext_resource type="Script" path="res://scripts/visuals/Billboard8Dir.gd" id="2_bb"]
+[ext_resource type="Texture2D" path="res://assets/sprites/slag_tick.png" id="3_tex"]
+[ext_resource type="Script" path="res://scripts/combat/EnemyHitbox.gd" id="4_hb"]
+
+[sub_resource type="CapsuleShape3D" id="CapsuleShape3D_body"]
+radius = 0.35
+height = 1.0
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_hb"]
+size = Vector3(0.8, 0.9, 0.8)
+
+[node name="SlagTick" type="CharacterBody3D"]
+script = ExtResource("1_enemy")
+enemy_id = "slag_tick"
+display_name = "Slag-Tick"
+max_hp = 25
+hp = 25
+evasion = 10
+attack_damage = 6
+attack_range = 1.8
+attack_cooldown = 1.2
+move_speed = 3.8
+detection_range = 12.0
+xp_reward = 20
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.5, 0)
+shape = SubResource("CapsuleShape3D_body")
+
+[node name="Billboard8Dir" type="Sprite3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.55, 0)
+pixel_size = 0.03
+billboard = 2
+texture_filter = 0
+texture = ExtResource("3_tex")
+vframes = 8
+script = ExtResource("2_bb")
+
+[node name="EnemyHitbox" type="Area3D" parent="."]
+script = ExtResource("4_hb")
+evasion = 10
+enemy_id = "slag_tick"
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="EnemyHitbox"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.5, 0)
+shape = SubResource("BoxShape3D_hb")

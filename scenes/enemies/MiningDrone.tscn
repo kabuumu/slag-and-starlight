@@ -1,0 +1,50 @@
+[gd_scene load_steps=6 format=3]
+
+[ext_resource type="Script" path="res://scripts/combat/EnemyBase.gd" id="1_enemy"]
+[ext_resource type="Script" path="res://scripts/visuals/Billboard8Dir.gd" id="2_bb"]
+[ext_resource type="Texture2D" path="res://assets/sprites/mining_drone.png" id="3_tex"]
+[ext_resource type="Script" path="res://scripts/combat/EnemyHitbox.gd" id="4_hb"]
+
+[sub_resource type="CapsuleShape3D" id="CapsuleShape3D_body"]
+radius = 0.4
+height = 1.4
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_hb"]
+size = Vector3(0.9, 1.1, 0.9)
+
+[node name="MiningDrone" type="CharacterBody3D"]
+script = ExtResource("1_enemy")
+enemy_id = "mining_drone"
+display_name = "Rogue Mining Drone"
+max_hp = 40
+hp = 40
+evasion = 15
+attack_damage = 10
+attack_range = 11.0
+attack_cooldown = 1.8
+move_speed = 3.0
+detection_range = 16.0
+xp_reward = 40
+is_ranged = true
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.7, 0)
+shape = SubResource("CapsuleShape3D_body")
+
+[node name="Billboard8Dir" type="Sprite3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.9, 0)
+pixel_size = 0.035
+billboard = 2
+texture_filter = 0
+texture = ExtResource("3_tex")
+vframes = 8
+script = ExtResource("2_bb")
+
+[node name="EnemyHitbox" type="Area3D" parent="."]
+script = ExtResource("4_hb")
+evasion = 15
+enemy_id = "mining_drone"
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="EnemyHitbox"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.85, 0)
+shape = SubResource("BoxShape3D_hb")

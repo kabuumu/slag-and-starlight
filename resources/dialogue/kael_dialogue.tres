@@ -1,0 +1,51 @@
+[gd_resource type="Resource" script_class="DialogueData" load_steps=3 format=3]
+
+[ext_resource type="Script" path="res://scripts/resources/DialogueData.gd" id="1_dlg"]
+[ext_resource type="Texture2D" path="res://assets/sprites/kael_npc.png" id="2_portrait"]
+
+[resource]
+script = ExtResource("1_dlg")
+npc_id = "kael"
+npc_name = "Kael (Union Tech)"
+portrait_texture = ExtResource("2_portrait")
+greeting = "Keep your voice down, driller. Reinforced glass is all that's keeping the automated turrets off my back. You're lucky you survived the collapse in the bunkhouse."
+topics = Array[Dictionary]([{
+"action": "start_dead_mans_switch",
+"label": "The Lockdown",
+"response": "Khoros Corp triggered a Level-4 containment seal the moment the deep-bore shelf fractured. They left us down here to suffocate. If we're getting out, we need the Lift Override Keycard from Overseer Vos's office.",
+"topic_id": "the_lockdown"
+}, {
+"label": "Cargo Lift",
+"response": "The Main Cargo Lift in Room 7 leads straight up to Rust-Spire Outpost. Power is throttled, and the override slot won't budge without Vos's keycard. Watch yourself—an excavation mech, Unit 734-B, is patrolling the platform.",
+"topic_id": "cargo_lift"
+}, {
+"label": "Overseer Vos",
+"response": "Vos evacuated before the dust settled, leaving his security bots and a Sentry Turret to guard his office. If you can crack his Mainframe, grab the Seismic Blackbox—those logs prove the Corp knew the bore was unstable.",
+"topic_id": "overseer_vos"
+}, {
+"action": "reroute_life_support",
+"label": "[Tech 15] Reroute life-support",
+"min_tech": 15,
+"response": "Good eye—that aux manifold feeds the checkpoint scrubbers. You bypassed the corporate interlock cleanly. Fresh air's flowing again, and I've unlocked a few extra suit cells from my kit for you.",
+"topic_id": "reroute_life_support"
+}, {
+"action": "miners_cant_union",
+"label": "[Miner's Cant] Deep-Bore Solidarity",
+"required_skill": "miners_cant",
+"response": "*Kael taps the glass twice in the old union cadence.* Haven't heard that cipher since the Ceres strike. Take my emergency stash code—and tell the Guild at Rust-Spire that Sub-Level 04 didn't go quietly.",
+"topic_id": "miners_cant_union"
+}, {
+"action": "give_blackbox_to_kael",
+"forbidden_flag": "blackbox_given_to_kael",
+"label": "Give Seismic Blackbox to Kael",
+"required_flag": "has_seismic_blackbox",
+"response": "You actually pulled the Blackbox from Vos's mainframe! The Mining Union will bury Khoros Corp in court with this. Here—take 150 credits and this Modded Blaster Barrel I've been saving.",
+"topic_id": "blackbox_turn_in"
+}, {
+"action": "keep_blackbox",
+"forbidden_flag": "blackbox_given_to_kael",
+"label": "Keep Seismic Blackbox for Surface",
+"required_flag": "has_seismic_blackbox",
+"response": "Keeping the logs for yourself, huh? Just make sure someone on the surface sees the truth—or at least pays what it's worth. Good luck on the lift.",
+"topic_id": "blackbox_keep"
+}])

@@ -1,0 +1,131 @@
+[gd_scene load_steps=16 format=3]
+
+[ext_resource type="Texture2D" path="res://assets/textures/floor_grate.png" id="1_floor"]
+[ext_resource type="Texture2D" path="res://assets/textures/wall_rust.png" id="2_wall"]
+[ext_resource type="Texture2D" path="res://assets/textures/ceiling_pipe.png" id="3_ceil"]
+[ext_resource type="Texture2D" path="res://assets/sprites/kael_npc.png" id="4_kael"]
+[ext_resource type="Script" path="res://scripts/visuals/Billboard8Dir.gd" id="5_billboard"]
+
+[sub_resource type="StandardMaterial3D" id="Mat_floor"]
+shading_mode = 2
+albedo_texture = ExtResource("1_floor")
+roughness = 1.0
+uv1_scale = Vector3(0.5, 0.5, 0.5)
+uv1_triplanar = true
+texture_filter = 0
+
+[sub_resource type="BoxMesh" id="Mesh_floor"]
+material = SubResource("Mat_floor")
+size = Vector3(8, 0.2, 8)
+
+[sub_resource type="BoxShape3D" id="Shape_floor"]
+size = Vector3(8, 0.2, 8)
+
+[sub_resource type="StandardMaterial3D" id="Mat_ceil"]
+shading_mode = 2
+albedo_texture = ExtResource("3_ceil")
+roughness = 1.0
+uv1_scale = Vector3(0.5, 0.5, 0.5)
+uv1_triplanar = true
+texture_filter = 0
+
+[sub_resource type="BoxMesh" id="Mesh_ceil"]
+material = SubResource("Mat_ceil")
+size = Vector3(8, 0.2, 8)
+
+[sub_resource type="StandardMaterial3D" id="Mat_wall"]
+shading_mode = 2
+albedo_texture = ExtResource("2_wall")
+roughness = 1.0
+uv1_scale = Vector3(0.5, 0.5, 0.5)
+uv1_triplanar = true
+texture_filter = 0
+
+[sub_resource type="BoxMesh" id="Mesh_wall_ns"]
+material = SubResource("Mat_wall")
+size = Vector3(8.4, 3.5, 0.2)
+
+[sub_resource type="BoxShape3D" id="Shape_wall_ns"]
+size = Vector3(8.4, 3.5, 0.2)
+
+[sub_resource type="BoxMesh" id="Mesh_wall_ew"]
+material = SubResource("Mat_wall")
+size = Vector3(0.2, 3.5, 8)
+
+[sub_resource type="BoxShape3D" id="Shape_wall_ew"]
+size = Vector3(0.2, 3.5, 8)
+
+[node name="RoomSmall" type="Node3D"]
+
+[node name="Floor" type="StaticBody3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.1, 0)
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="Floor"]
+mesh = SubResource("Mesh_floor")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Floor"]
+shape = SubResource("Shape_floor")
+
+[node name="Ceiling" type="StaticBody3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 3.6, 0)
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="Ceiling"]
+mesh = SubResource("Mesh_ceil")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Ceiling"]
+shape = SubResource("Shape_floor")
+
+[node name="WallNorth" type="StaticBody3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.75, -4.1)
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="WallNorth"]
+mesh = SubResource("Mesh_wall_ns")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="WallNorth"]
+shape = SubResource("Shape_wall_ns")
+
+[node name="WallSouth" type="StaticBody3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.75, 4.1)
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="WallSouth"]
+mesh = SubResource("Mesh_wall_ns")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="WallSouth"]
+shape = SubResource("Shape_wall_ns")
+
+[node name="WallWest" type="StaticBody3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -4.1, 1.75, 0)
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="WallWest"]
+mesh = SubResource("Mesh_wall_ew")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="WallWest"]
+shape = SubResource("Shape_wall_ew")
+
+[node name="WallEast" type="StaticBody3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4.1, 1.75, 0)
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="WallEast"]
+mesh = SubResource("Mesh_wall_ew")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="WallEast"]
+shape = SubResource("Shape_wall_ew")
+
+[node name="OmniLight3D" type="OmniLight3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.8, 0)
+light_color = Color(1, 0.72, 0.45, 1)
+light_energy = 1.6
+omni_range = 10.0
+
+[node name="TestBillboardNPC" type="Node3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -2.5)
+
+[node name="Sprite3D" type="Sprite3D" parent="TestBillboardNPC"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.9, 0)
+pixel_size = 0.028
+billboard = 2
+texture_filter = 0
+texture = ExtResource("4_kael")
+hframes = 4
+vframes = 8
+script = ExtResource("5_billboard")

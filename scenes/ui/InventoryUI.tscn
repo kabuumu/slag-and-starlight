@@ -1,0 +1,262 @@
+[gd_scene load_steps=4 format=3]
+
+[ext_resource type="Script" path="res://scripts/ui/InventoryUI.gd" id="1_inv_ui"]
+[ext_resource type="Script" path="res://scripts/ui/InventorySlot.gd" id="2_inv_slot"]
+[ext_resource type="Texture2D" path="res://assets/ui/paperdoll_undersuit.png" id="3_undersuit"]
+
+[node name="InventoryUI" type="Control"]
+process_mode = 3
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_inv_ui")
+
+[node name="Backdrop" type="ColorRect" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0.05, 0.03, 0.03, 0.78)
+
+[node name="MainPanel" type="PanelContainer" parent="."]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -280.0
+offset_top = -170.0
+offset_right = 280.0
+offset_bottom = 170.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Margin" type="MarginContainer" parent="MainPanel"]
+layout_mode = 2
+theme_override_constants/margin_left = 10
+theme_override_constants/margin_top = 10
+theme_override_constants/margin_right = 10
+theme_override_constants/margin_bottom = 10
+
+[node name="RootHBox" type="HBoxContainer" parent="MainPanel/Margin"]
+layout_mode = 2
+theme_override_constants/separation = 16
+
+[node name="PaperDollPanel" type="VBoxContainer" parent="MainPanel/Margin/RootHBox"]
+layout_mode = 2
+theme_override_constants/separation = 8
+
+[node name="Title" type="Label" parent="MainPanel/Margin/RootHBox/PaperDollPanel"]
+layout_mode = 2
+text = "EXO-RIG // PAPER-DOLL"
+horizontal_alignment = 1
+
+[node name="PaperDollArea" type="HBoxContainer" parent="MainPanel/Margin/RootHBox/PaperDollPanel"]
+layout_mode = 2
+theme_override_constants/separation = 8
+
+[node name="LeftSlots" type="VBoxContainer" parent="MainPanel/Margin/RootHBox/PaperDollPanel/PaperDollArea"]
+layout_mode = 2
+theme_override_constants/separation = 6
+
+[node name="HeadSlot" type="PanelContainer" parent="MainPanel/Margin/RootHBox/PaperDollPanel/PaperDollArea/LeftSlots"]
+custom_minimum_size = Vector2(40, 40)
+layout_mode = 2
+script = ExtResource("2_inv_slot")
+allowed_slot_type = 1
+slot_label_text = "HEAD"
+
+[node name="PauldronsSlot" type="PanelContainer" parent="MainPanel/Margin/RootHBox/PaperDollPanel/PaperDollArea/LeftSlots"]
+custom_minimum_size = Vector2(40, 40)
+layout_mode = 2
+script = ExtResource("2_inv_slot")
+allowed_slot_type = 3
+slot_label_text = "PAULDRON"
+
+[node name="TorsoSlot" type="PanelContainer" parent="MainPanel/Margin/RootHBox/PaperDollPanel/PaperDollArea/LeftSlots"]
+custom_minimum_size = Vector2(40, 40)
+layout_mode = 2
+script = ExtResource("2_inv_slot")
+allowed_slot_type = 2
+slot_label_text = "TORSO"
+
+[node name="PrimaryHandSlot" type="PanelContainer" parent="MainPanel/Margin/RootHBox/PaperDollPanel/PaperDollArea/LeftSlots"]
+custom_minimum_size = Vector2(40, 40)
+layout_mode = 2
+script = ExtResource("2_inv_slot")
+allowed_slot_type = 6
+slot_label_text = "WEAPON"
+
+[node name="PaperDollStack" type="Control" parent="MainPanel/Margin/RootHBox/PaperDollPanel/PaperDollArea"]
+custom_minimum_size = Vector2(96, 176)
+layout_mode = 2
+
+[node name="UnderSuitLayer" type="TextureRect" parent="MainPanel/Margin/RootHBox/PaperDollPanel/PaperDollArea/PaperDollStack"]
+texture_filter = 1
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+texture = ExtResource("3_undersuit")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="GreavesLayer" type="TextureRect" parent="MainPanel/Margin/RootHBox/PaperDollPanel/PaperDollArea/PaperDollStack"]
+z_index = 1
+texture_filter = 1
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+expand_mode = 1
+stretch_mode = 5
+
+[node name="TorsoLayer" type="TextureRect" parent="MainPanel/Margin/RootHBox/PaperDollPanel/PaperDollArea/PaperDollStack"]
+z_index = 2
+texture_filter = 1
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+expand_mode = 1
+stretch_mode = 5
+
+[node name="GauntletsLayer" type="TextureRect" parent="MainPanel/Margin/RootHBox/PaperDollPanel/PaperDollArea/PaperDollStack"]
+z_index = 3
+texture_filter = 1
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+expand_mode = 1
+stretch_mode = 5
+
+[node name="PauldronsLayer" type="TextureRect" parent="MainPanel/Margin/RootHBox/PaperDollPanel/PaperDollArea/PaperDollStack"]
+z_index = 4
+texture_filter = 1
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+expand_mode = 1
+stretch_mode = 5
+
+[node name="HeadLayer" type="TextureRect" parent="MainPanel/Margin/RootHBox/PaperDollPanel/PaperDollArea/PaperDollStack"]
+z_index = 5
+texture_filter = 1
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+expand_mode = 1
+stretch_mode = 5
+
+[node name="PrimaryHandLayer" type="TextureRect" parent="MainPanel/Margin/RootHBox/PaperDollPanel/PaperDollArea/PaperDollStack"]
+z_index = 6
+texture_filter = 1
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+expand_mode = 1
+stretch_mode = 5
+
+[node name="UtilityLayer" type="TextureRect" parent="MainPanel/Margin/RootHBox/PaperDollPanel/PaperDollArea/PaperDollStack"]
+z_index = 7
+texture_filter = 1
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+expand_mode = 1
+stretch_mode = 5
+
+[node name="RightSlots" type="VBoxContainer" parent="MainPanel/Margin/RootHBox/PaperDollPanel/PaperDollArea"]
+layout_mode = 2
+theme_override_constants/separation = 6
+
+[node name="GauntletsSlot" type="PanelContainer" parent="MainPanel/Margin/RootHBox/PaperDollPanel/PaperDollArea/RightSlots"]
+custom_minimum_size = Vector2(40, 40)
+layout_mode = 2
+script = ExtResource("2_inv_slot")
+allowed_slot_type = 4
+slot_label_text = "GAUNTLET"
+
+[node name="GreavesSlot" type="PanelContainer" parent="MainPanel/Margin/RootHBox/PaperDollPanel/PaperDollArea/RightSlots"]
+custom_minimum_size = Vector2(40, 40)
+layout_mode = 2
+script = ExtResource("2_inv_slot")
+allowed_slot_type = 5
+slot_label_text = "GREAVES"
+
+[node name="UtilitySlot" type="PanelContainer" parent="MainPanel/Margin/RootHBox/PaperDollPanel/PaperDollArea/RightSlots"]
+custom_minimum_size = Vector2(40, 40)
+layout_mode = 2
+script = ExtResource("2_inv_slot")
+allowed_slot_type = 7
+slot_label_text = "UTILITY"
+
+[node name="StatsReadout" type="GridContainer" parent="MainPanel/Margin/RootHBox/PaperDollPanel"]
+layout_mode = 2
+columns = 2
+
+[node name="HPLabel" type="Label" parent="MainPanel/Margin/RootHBox/PaperDollPanel/StatsReadout"]
+layout_mode = 2
+text = "HP: 100 / 100"
+
+[node name="ArmorLabel" type="Label" parent="MainPanel/Margin/RootHBox/PaperDollPanel/StatsReadout"]
+layout_mode = 2
+text = "ARMOR: 0"
+
+[node name="WeightLabel" type="Label" parent="MainPanel/Margin/RootHBox/PaperDollPanel/StatsReadout"]
+layout_mode = 2
+text = "WEIGHT: 0.0 kg"
+
+[node name="CreditsLabel" type="Label" parent="MainPanel/Margin/RootHBox/PaperDollPanel/StatsReadout"]
+layout_mode = 2
+text = "CREDITS: 0"
+
+[node name="BackpackPanel" type="VBoxContainer" parent="MainPanel/Margin/RootHBox"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/separation = 8
+
+[node name="HeaderRow" type="HBoxContainer" parent="MainPanel/Margin/RootHBox/BackpackPanel"]
+layout_mode = 2
+
+[node name="BackpackTitle" type="Label" parent="MainPanel/Margin/RootHBox/BackpackPanel/HeaderRow"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "BACKPACK"
+
+[node name="CloseButton" type="Button" parent="MainPanel/Margin/RootHBox/BackpackPanel/HeaderRow"]
+layout_mode = 2
+text = "X"
+
+[node name="BackpackGrid" type="GridContainer" parent="MainPanel/Margin/RootHBox/BackpackPanel"]
+layout_mode = 2
+theme_override_constants/h_separation = 4
+theme_override_constants/v_separation = 4
+columns = 4

@@ -1,0 +1,14 @@
+[gd_resource type="Resource" script_class="SkillResource" load_steps=3 format=3]
+
+[ext_resource type="Script" path="res://scripts/resources/SkillResource.gd" id="1_skill"]
+[ext_resource type="Resource" path="res://resources/skills/cell_recycler.tres" id="2_prereq"]
+
+[resource]
+script = ExtResource("1_skill")
+id = "field_nano_repair"
+display_name = "Field Nano-Repair"
+description = "Repair armor durability without a workbench."
+branch = "Cyber-Splicer"
+cost = 1
+prerequisites = Array[ExtResource("1_skill")]([ExtResource("2_prereq")])
+tier = 3

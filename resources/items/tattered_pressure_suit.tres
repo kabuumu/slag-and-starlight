@@ -1,0 +1,23 @@
+[gd_resource type="Resource" script_class="ItemData" load_steps=4 format=3]
+
+[ext_resource type="Script" path="res://scripts/resources/ItemData.gd" id="1_item"]
+[ext_resource type="Texture2D" path="res://assets/ui/icon_suit.png" id="2_icon"]
+[ext_resource type="Texture2D" path="res://assets/ui/paperdoll_torso.png" id="3_doll"]
+
+[resource]
+script = ExtResource("1_item")
+id = "tattered_pressure_suit"
+name = "Tattered Pressure Suit"
+icon = ExtResource("2_icon")
+paper_doll_sprite = ExtResource("3_doll")
+slot_type = 2
+weight = 6.0
+armor_rating = 6
+damage_range = Vector2i(0, 0)
+durability = 100
+max_durability = 100
+description = "Patched Khoros-IV mining rig torso plating."
+value_credits = 60
+is_consumable = false
+heal_amount = 0
+lockpick_bonus = 0.0

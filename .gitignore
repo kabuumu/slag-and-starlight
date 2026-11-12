@@ -1,0 +1,18 @@
+# Godot 4+ specific ignores
+.godot/
+*.translation
+export_presets.cfg
+
+# Mono / C#
+.mono/
+data_*/
+mono_crash.*.json
+
+# Python / tools
+__pycache__/
+*.py[cod]
+
+# OS / Editor
+.DS_Store
+Thumbs.db
+*~

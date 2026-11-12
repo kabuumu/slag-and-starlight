@@ -1,0 +1,14 @@
+[gd_resource type="Resource" script_class="SkillResource" load_steps=3 format=3]
+
+[ext_resource type="Script" path="res://scripts/resources/SkillResource.gd" id="1_skill"]
+[ext_resource type="Resource" path="res://resources/skills/jury_rigged_blaster.tres" id="2_prereq"]
+
+[resource]
+script = ExtResource("1_skill")
+id = "overcharge_capacitor"
+display_name = "Overcharge Capacitor"
+description = "Hold fire for 2x damage shot."
+branch = "Void-Scrapper"
+cost = 1
+prerequisites = Array[ExtResource("1_skill")]([ExtResource("2_prereq")])
+tier = 2

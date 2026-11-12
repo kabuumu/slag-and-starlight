@@ -1,0 +1,13 @@
+[gd_resource type="Resource" script_class="SkillResource" load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://scripts/resources/SkillResource.gd" id="1_skill"]
+
+[resource]
+script = ExtResource("1_skill")
+id = "signal_bypass"
+display_name = "Signal Bypass"
+description = "+1 node visibility in Hacking minigame."
+branch = "Cyber-Splicer"
+cost = 1
+prerequisites = Array[ExtResource("1_skill")]([])
+tier = 1

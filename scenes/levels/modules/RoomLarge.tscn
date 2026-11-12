@@ -1,0 +1,141 @@
+[gd_scene load_steps=18 format=3]
+
+[ext_resource type="Texture2D" path="res://assets/textures/floor_grate.png" id="1_floor"]
+[ext_resource type="Texture2D" path="res://assets/textures/wall_rust.png" id="2_wall"]
+[ext_resource type="Texture2D" path="res://assets/textures/ceiling_pipe.png" id="3_ceil"]
+[ext_resource type="Texture2D" path="res://assets/textures/catwalk_metal.png" id="4_catwalk"]
+
+[sub_resource type="StandardMaterial3D" id="Mat_floor"]
+shading_mode = 2
+albedo_texture = ExtResource("1_floor")
+roughness = 1.0
+uv1_scale = Vector3(0.5, 0.5, 0.5)
+uv1_triplanar = true
+texture_filter = 0
+
+[sub_resource type="BoxMesh" id="Mesh_floor"]
+material = SubResource("Mat_floor")
+size = Vector3(14, 0.2, 14)
+
+[sub_resource type="BoxShape3D" id="Shape_floor"]
+size = Vector3(14, 0.2, 14)
+
+[sub_resource type="StandardMaterial3D" id="Mat_ceil"]
+shading_mode = 2
+albedo_texture = ExtResource("3_ceil")
+roughness = 1.0
+uv1_scale = Vector3(0.5, 0.5, 0.5)
+uv1_triplanar = true
+texture_filter = 0
+
+[sub_resource type="BoxMesh" id="Mesh_ceil"]
+material = SubResource("Mat_ceil")
+size = Vector3(14, 0.2, 14)
+
+[sub_resource type="StandardMaterial3D" id="Mat_wall"]
+shading_mode = 2
+albedo_texture = ExtResource("2_wall")
+roughness = 1.0
+uv1_scale = Vector3(0.5, 0.5, 0.5)
+uv1_triplanar = true
+texture_filter = 0
+
+[sub_resource type="BoxMesh" id="Mesh_wall_ns"]
+material = SubResource("Mat_wall")
+size = Vector3(14.4, 5, 0.2)
+
+[sub_resource type="BoxShape3D" id="Shape_wall_ns"]
+size = Vector3(14.4, 5, 0.2)
+
+[sub_resource type="BoxMesh" id="Mesh_wall_ew"]
+material = SubResource("Mat_wall")
+size = Vector3(0.2, 5, 14)
+
+[sub_resource type="BoxShape3D" id="Shape_wall_ew"]
+size = Vector3(0.2, 5, 14)
+
+[sub_resource type="StandardMaterial3D" id="Mat_catwalk"]
+shading_mode = 2
+albedo_texture = ExtResource("4_catwalk")
+roughness = 1.0
+uv1_scale = Vector3(0.5, 0.5, 0.5)
+uv1_triplanar = true
+texture_filter = 0
+
+[sub_resource type="BoxMesh" id="Mesh_catwalk"]
+material = SubResource("Mat_catwalk")
+size = Vector3(14, 0.2, 3)
+
+[sub_resource type="BoxShape3D" id="Shape_catwalk"]
+size = Vector3(14, 0.2, 3)
+
+[node name="RoomLarge" type="Node3D"]
+
+[node name="Floor" type="StaticBody3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.1, 0)
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="Floor"]
+mesh = SubResource("Mesh_floor")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Floor"]
+shape = SubResource("Shape_floor")
+
+[node name="Ceiling" type="StaticBody3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 5.1, 0)
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="Ceiling"]
+mesh = SubResource("Mesh_ceil")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Ceiling"]
+shape = SubResource("Shape_floor")
+
+[node name="WallNorth" type="StaticBody3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.5, -7.1)
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="WallNorth"]
+mesh = SubResource("Mesh_wall_ns")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="WallNorth"]
+shape = SubResource("Shape_wall_ns")
+
+[node name="WallSouth" type="StaticBody3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.5, 7.1)
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="WallSouth"]
+mesh = SubResource("Mesh_wall_ns")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="WallSouth"]
+shape = SubResource("Shape_wall_ns")
+
+[node name="WallWest" type="StaticBody3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -7.1, 2.5, 0)
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="WallWest"]
+mesh = SubResource("Mesh_wall_ew")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="WallWest"]
+shape = SubResource("Shape_wall_ew")
+
+[node name="WallEast" type="StaticBody3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 7.1, 2.5, 0)
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="WallEast"]
+mesh = SubResource("Mesh_wall_ew")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="WallEast"]
+shape = SubResource("Shape_wall_ew")
+
+[node name="UpperCatwalk" type="StaticBody3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.4, -4.5)
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="UpperCatwalk"]
+mesh = SubResource("Mesh_catwalk")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="UpperCatwalk"]
+shape = SubResource("Shape_catwalk")
+
+[node name="OmniLight3D" type="OmniLight3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 4.2, 0)
+light_color = Color(1, 0.72, 0.45, 1)
+light_energy = 1.8
+omni_range = 16.0
