@@ -42,7 +42,7 @@ const SPARK_TEXTURE_PATH: String = "res://assets/sprites/spark_2d.png"
 
 func _ready() -> void:
 	add_to_group("player")
-	if not DisplayServer.get_name().begins_with("headless"):
+	if not DisplayServer.get_name().begins_with("headless") and not OS.has_feature("web"):
 		Input.mouse_mode = Input.MOUSE_MODE_CAPTURED
 	var bus: Node = get_node_or_null("/root/EventBus")
 	if bus != null and bus.has_signal("equipment_changed"):
@@ -50,6 +50,12 @@ func _ready() -> void:
 
 
 func _unhandled_input(event: InputEvent) -> void:
+	if event is InputEventMouseButton and event.pressed:
+		if event.button_index in [MOUSE_BUTTON_LEFT, MOUSE_BUTTON_RIGHT]:
+			if Input.mouse_mode != Input.MOUSE_MODE_CAPTURED and not DisplayServer.get_name().begins_with("headless"):
+				Input.mouse_mode = Input.MOUSE_MODE_CAPTURED
+				get_viewport().set_input_as_handled()
+				return
 	if event is InputEventMouseMotion:
 		if _is_holding_attack and _is_using_melee() and not _melee_swung_this_hold:
 			_melee_drag_accum += event.relative
