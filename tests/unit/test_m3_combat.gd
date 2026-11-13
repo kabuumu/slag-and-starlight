@@ -90,6 +90,10 @@ func _test_t1_enemy_archetype_scenes_load(tree: SceneTree, h: RefCounted) -> voi
 		if h.assert_not_null(packed, "Missing enemy scene: %s" % path):
 			var inst = packed.instantiate()
 			h.assert_not_null(inst, "Failed to instantiate %s" % path)
+			var bb := inst.get_node_or_null("Billboard8Dir") as Sprite3D
+			if h.assert_not_null(bb, "%s must have Billboard8Dir Sprite3D" % path):
+				h.assert_eq(bb.hframes, 4, "%s Billboard8Dir must have hframes = 4" % path)
+				h.assert_eq(bb.vframes, 8, "%s Billboard8Dir must have vframes = 8" % path)
 			inst.queue_free()
 	h.end_test()
 
@@ -147,6 +151,7 @@ func _test_t2_blaster_hit_chance_clamped_5_to_95(tree: SceneTree, h: RefCounted)
 func _test_t2_blaster_overheat_and_zero_power_cells(tree: SceneTree, h: RefCounted) -> void:
 	h.begin_test("T2_M3_blaster_overheat_and_zero_power_cells")
 	h.reset_singletons(tree)
+	var ps = h.get_autoload(tree, "PlayerStats")
 	var pc_script = h.load_script_safe("res://scripts/player/PlayerController.gd")
 	if not h.assert_not_null(pc_script, "PlayerController.gd required"):
 		h.end_test()
@@ -157,7 +162,10 @@ func _test_t2_blaster_overheat_and_zero_power_cells(tree: SceneTree, h: RefCount
 	if h.assert_true(pc.has_method("reload_power_cell"), "PlayerController must expose reload_power_cell()"):
 		var reloaded: bool = pc.reload_power_cell()
 		h.assert_false(reloaded, "Reloading with 0 Power Cells in backpack must return false")
-	if pc.has_method("_fire_blaster"):
+	if pc.has_method("_fire_blaster") and ps != null:
+		ps.suit_power = 0.0
+		pc._fire_blaster(true)
+		h.assert_approx(pc.current_heat, pc.heat_per_shot, 0.01, "Overcharged shot with 0 suit_power must downgrade to normal 1x heat")
 		for i in range(6):
 			pc._fire_blaster(false)
 		h.assert_true(pc.is_overheated, "Firing blaster past max_heat must set is_overheated = true")

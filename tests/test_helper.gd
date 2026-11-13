@@ -159,9 +159,17 @@ func reset_singletons(tree: SceneTree) -> void:
 		if "completed_quests" in gs:
 			gs.completed_quests.clear()
 		if "faction_reputation" in gs:
-			gs.faction_reputation.clear()
+			gs.faction_reputation = {
+				"mining_union": 0,
+				"khoros_corp": 0,
+				"free_drifters": 0,
+			}
 		if "world_state" in gs:
-			gs.world_state.clear()
+			gs.world_state = {
+				"current_sector": "sub_level_04",
+				"lockdown_active": true,
+				"lift_powered": false,
+			}
 
 	var ps := get_autoload(tree, "PlayerStats")
 	if ps != null:

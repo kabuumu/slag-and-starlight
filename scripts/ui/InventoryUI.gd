@@ -31,6 +31,7 @@ const BACKPACK_CAPACITY: int = 24
 var _equipment_slots: Dictionary = {}
 var _paper_doll_layers: Dictionary = {}
 var _backpack_slots: Array[InventorySlot] = []
+var _overflow_backpack_items: Array[Resource] = []
 var _is_syncing: bool = false
 
 
@@ -153,12 +154,17 @@ func refresh_from_player_stats() -> void:
 			var item: ItemData = ps.equipped_items.get(slot_type, null) as ItemData
 			slot.set_item(item, false)
 
+	_overflow_backpack_items.clear()
 	for i in range(_backpack_slots.size()):
 		var bp_slot: InventorySlot = _backpack_slots[i]
 		if i < ps.backpack_items.size():
 			bp_slot.set_item(ps.backpack_items[i] as ItemData, false)
 		else:
 			bp_slot.set_item(null, false)
+	if ps.backpack_items.size() > BACKPACK_CAPACITY:
+		for idx in range(BACKPACK_CAPACITY, ps.backpack_items.size()):
+			if ps.backpack_items[idx] != null:
+				_overflow_backpack_items.append(ps.backpack_items[idx])
 	_is_syncing = false
 
 	_update_paper_doll_layers()
@@ -185,10 +191,9 @@ func _on_any_slot_changed(changed_slot: InventorySlot) -> void:
 	for bp_slot in _backpack_slots:
 		if bp_slot.held_item != null:
 			new_backpack.append(bp_slot.held_item)
-	if ps.backpack_items.size() > BACKPACK_CAPACITY:
-		for idx in range(BACKPACK_CAPACITY, ps.backpack_items.size()):
-			if ps.backpack_items[idx] != null:
-				new_backpack.append(ps.backpack_items[idx])
+	for overflow_item in _overflow_backpack_items:
+		if overflow_item != null:
+			new_backpack.append(overflow_item)
 	ps.backpack_items = new_backpack
 	_is_syncing = false
 
@@ -235,6 +240,13 @@ func _update_stats_readout() -> void:
 func _on_player_stats_changed() -> void:
 	if not _is_syncing:
 		_update_stats_readout()
+		for slot_type in _equipment_slots.keys():
+			var eq_slot: InventorySlot = _equipment_slots[slot_type]
+			if eq_slot != null:
+				eq_slot._refresh_visuals()
+		for bp_slot in _backpack_slots:
+			if bp_slot != null:
+				bp_slot._refresh_visuals()
 
 
 func _on_equipment_changed(_slot_type: int) -> void:

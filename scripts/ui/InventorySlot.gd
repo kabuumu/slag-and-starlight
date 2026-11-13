@@ -163,12 +163,9 @@ func _use_held_consumable() -> void:
 	if held_item == null or not held_item.is_consumable:
 		return
 	var used_item: ItemData = held_item
-	if get_node_or_null("/root/PlayerStats") != null:
-		var ps: Node = get_node("/root/PlayerStats")
-		if ps.has_method("consume_item"):
-			var consumed: bool = bool(ps.call("consume_item", used_item.id))
-			if consumed:
-				set_item(null, true)
-				item_used.emit(self, used_item)
-				return
-	item_used.emit(self, used_item)
+	var ps: Node = get_node_or_null("/root/PlayerStats")
+	if ps != null and ps.has_method("consume_item"):
+		var consumed: bool = bool(ps.call("consume_item", used_item.id))
+		if consumed:
+			set_item(null, true)
+			item_used.emit(self, used_item)

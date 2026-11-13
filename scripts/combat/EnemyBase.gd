@@ -31,7 +31,7 @@ var _gravity: float = ProjectSettings.get_setting("physics/3d/default_gravity", 
 
 func _ready() -> void:
 	add_to_group("enemies")
-	if hp <= 0:
+	if hp <= 0 and state != State.DEAD:
 		hp = max_hp
 	if hitbox != null:
 		hitbox.evasion = evasion
@@ -130,10 +130,24 @@ func _perform_attack() -> void:
 				"%s hits your %s for %d dmg (%d absorbed)" % [display_name, loc, dmg, absorbed],
 				"enemy_attack"
 			)
+		if int(res.get("remaining_hp", 1)) <= 0 and is_inside_tree():
+			stats.hp = maxi(1, int(stats.max_hp / 2))
+			if stats.has_method("recalculate_derived_stats"):
+				stats.call("recalculate_derived_stats")
+			var player_node: Node3D = _get_player()
+			var parent_level: Node = get_parent()
+			while parent_level != null and parent_level.get_node_or_null("PlayerSpawn") == null:
+				parent_level = parent_level.get_parent()
+			if player_node != null and parent_level != null:
+				var spawn: Node3D = parent_level.get_node_or_null("PlayerSpawn") as Node3D
+				if spawn != null:
+					player_node.global_position = spawn.global_position
+			if bus != null:
+				bus.combat_log_entry.emit("CRITICAL SUIT FAILURE! Emergency auto-stims deployed; evacuated to sector spawn.", "system")
 
 
 func take_damage(amount: int, damage_type: String = "blaster", is_stagger: bool = false) -> void:
-	if state == State.DEAD:
+	if state == State.DEAD or amount <= 0:
 		return
 	hp = maxi(0, hp - maxi(0, amount))
 	if hitbox != null:

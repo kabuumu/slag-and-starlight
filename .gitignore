@@ -12,7 +12,8 @@ mono_crash.*.json
 __pycache__/
 *.py[cod]
 
-# OS / Editor
+# OS / Editor / Agent Workspace
 .DS_Store
 Thumbs.db
 *~
+.agents/

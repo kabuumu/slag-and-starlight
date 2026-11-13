@@ -33,6 +33,7 @@ var _is_holding_attack: bool = false
 var _attack_hold_time: float = 0.0
 var _melee_drag_accum: Vector2 = Vector2.ZERO
 var _melee_swung_this_hold: bool = false
+var _was_in_vent_zone: bool = false
 
 const SPARK_TEXTURE_PATH: String = "res://assets/sprites/spark_2d.png"
 
@@ -43,10 +44,14 @@ const SPARK_TEXTURE_PATH: String = "res://assets/sprites/spark_2d.png"
 
 func _ready() -> void:
 	add_to_group("player")
+	if interact_ray != null:
+		interact_ray.add_exception(self)
+	if weapon_ray != null:
+		weapon_ray.add_exception(self)
 	if not DisplayServer.get_name().begins_with("headless") and not OS.has_feature("web"):
 		Input.mouse_mode = Input.MOUSE_MODE_CAPTURED
 	var bus: Node = get_node_or_null("/root/EventBus")
-	if bus != null and bus.has_signal("equipment_changed"):
+	if bus != null and bus.has_signal("equipment_changed") and not bus.equipment_changed.is_connected(_on_equipment_changed):
 		bus.equipment_changed.connect(_on_equipment_changed)
 
 
@@ -126,7 +131,13 @@ func _physics_process(delta: float) -> void:
 		is_dead = false
 
 	if _is_holding_attack:
-		_attack_hold_time += delta
+		if not DisplayServer.get_name().begins_with("headless") and not Input.is_action_pressed("attack"):
+			_is_holding_attack = false
+			_attack_hold_time = 0.0
+			_melee_drag_accum = Vector2.ZERO
+			_melee_swung_this_hold = false
+		else:
+			_attack_hold_time += delta
 
 	if current_heat > 0.0:
 		current_heat = maxf(0.0, current_heat - cooling_rate * delta)
@@ -144,9 +155,14 @@ func _physics_process(delta: float) -> void:
 			if bus != null:
 				bus.player_stats_changed.emit()
 
-	# Detect Room 4 ventilation crawlspace proximity
-	if absf(global_position.x - (-4.5)) <= 1.8 and absf(global_position.z - (-40.0)) <= 3.0:
+	# Detect Room 4 ventilation crawlspace proximity and reset on exit
+	var inside_vent_box: bool = absf(global_position.x - (-4.5)) <= 1.8 and absf(global_position.z - (-40.0)) <= 3.0
+	if inside_vent_box:
 		in_vent = true
+		_was_in_vent_zone = true
+	elif _was_in_vent_zone:
+		in_vent = false
+		_was_in_vent_zone = false
 
 	if not is_on_floor():
 		velocity.y -= gravity * delta
@@ -231,7 +247,7 @@ func _is_using_melee() -> bool:
 		var primary: Variant = stats.equipped_items.get(ItemData.SlotType.PRIMARY_HAND, null)
 		if primary != null and primary is Resource:
 			var item_id: String = str(primary.get("id"))
-			if "spanner" in item_id or "torch" in item_id:
+			if bool(primary.get("is_melee_weapon")) or "spanner" in item_id or "torch" in item_id:
 				return true
 			if "blaster" in item_id:
 				return false
@@ -296,11 +312,14 @@ func _fire_blaster(is_overcharged: bool = false) -> void:
 		var tech_val: int = int(stats.attributes.get("tech", 5))
 		if tech_val > 5:
 			tech_eff = clampf(1.0 - float(tech_val - 5) * 0.03, 0.5, 1.0)
-		if is_overcharged and float(stats.suit_power) >= 10.0:
+	if is_overcharged:
+		if stats != null and float(stats.suit_power) >= 10.0:
 			stats.suit_power = maxf(0.0, float(stats.suit_power) - 10.0)
 			var bus: Node = get_node_or_null("/root/EventBus")
 			if bus != null:
 				bus.player_stats_changed.emit()
+		else:
+			is_overcharged = false
 
 	var added_heat: float = heat_per_shot * tech_eff * (2.0 if is_overcharged else 1.0)
 	current_heat = minf(max_heat, current_heat + added_heat)
@@ -400,7 +419,14 @@ func _perform_melee_attack(mods: Dictionary) -> void:
 
 
 func apply_ambush_bonus(base_dmg: int, collider: Object) -> int:
-	if collider != null and bool(collider.get("is_unaware")) and _has_skill("ambush_calibration"):
+	if collider == null or not _has_skill("ambush_calibration"):
+		return base_dmg
+	var target_hb: Object = collider
+	if not ("is_unaware" in target_hb) and collider is Node:
+		var child_hb: Node = (collider as Node).get_node_or_null("EnemyHitbox")
+		if child_hb != null:
+			target_hb = child_hb
+	if target_hb != null and bool(target_hb.get("is_unaware")):
 		return int(round(float(base_dmg) * 1.5))
 	return base_dmg
 
@@ -415,8 +441,10 @@ func _try_ricochet_hit(origin_pos: Vector3, excluded_hitbox: Object) -> void:
 			continue
 		if enemy.get("state") == EnemyBase.State.DEAD:
 			continue
+		if bool(enemy.get("is_friendly")):
+			continue
 		var hb: Node = enemy.get_node_or_null("EnemyHitbox")
-		if hb == excluded_hitbox:
+		if enemy == excluded_hitbox or hb == excluded_hitbox:
 			continue
 		if (enemy as Node3D).global_position.distance_to(origin_pos) <= 8.0:
 			var dmg: int = maxi(1, int(round(float(_roll_weapon_damage(Vector2i(8, 14))) * 0.75)))
@@ -433,9 +461,12 @@ func _roll_weapon_damage(fallback_range: Vector2i) -> int:
 	if stats != null:
 		var primary: Variant = stats.equipped_items.get(ItemData.SlotType.PRIMARY_HAND, null)
 		if primary != null and primary is Resource:
-			var r: Variant = primary.get("damage_range")
-			if r is Vector2i and r.y > 0:
-				dmg_range = r
+			var item_id: String = str(primary.get("id"))
+			var item_is_melee: bool = bool(primary.get("is_melee_weapon")) or ("spanner" in item_id) or ("torch" in item_id)
+			if item_is_melee == _is_using_melee():
+				var r: Variant = primary.get("damage_range")
+				if r is Vector2i and r.y > 0:
+					dmg_range = r
 	return randi_range(dmg_range.x, dmg_range.y)
 
 
@@ -499,6 +530,7 @@ func _spawn_spark(world_pos: Vector3) -> void:
 	var tex: Texture2D = load(SPARK_TEXTURE_PATH) if ResourceLoader.exists(SPARK_TEXTURE_PATH) else null
 	if tex != null:
 		spark.texture = tex
+	spark.hframes = 4
 	spark.billboard = BaseMaterial3D.BILLBOARD_ENABLED
 	spark.texture_filter = BaseMaterial3D.TEXTURE_FILTER_NEAREST
 	spark.pixel_size = 0.025

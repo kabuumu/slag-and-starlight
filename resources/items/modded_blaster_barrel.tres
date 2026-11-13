@@ -8,6 +8,7 @@ script = ExtResource("1_item")
 id = "modded_blaster_barrel"
 name = "Modded Blaster Barrel"
 icon = ExtResource("2_icon")
+paper_doll_sprite = ExtResource("2_icon")
 slot_type = 7
 weight = 0.8
 armor_rating = 0

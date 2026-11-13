@@ -7,6 +7,7 @@ Generates a locked 256-color industrial/rust palette and all textures,
 Requires: Python 3.11+, Pillow 9.4.0+, NumPy 1.24.2+
 """
 
+import argparse
 from pathlib import Path
 import math
 import numpy as np
@@ -19,6 +20,7 @@ TEXTURES_DIR = ASSETS_DIR / "textures"
 SPRITES_DIR = ASSETS_DIR / "sprites"
 WEAPONS_DIR = ASSETS_DIR / "weapons"
 UI_DIR = ASSETS_DIR / "ui"
+FORCE_OVERWRITE: bool = False
 
 
 def build_khoros_palette() -> np.ndarray:
@@ -92,6 +94,8 @@ def quantize_to_palette(img: Image.Image) -> Image.Image:
 
 
 def save_png(img: Image.Image, path: Path) -> None:
+    if path.exists() and not FORCE_OVERWRITE:
+        return
     path.parent.mkdir(parents=True, exist_ok=True)
     quantized = quantize_to_palette(img)
     quantized.save(path, format="PNG")
@@ -481,11 +485,21 @@ def generate_ui() -> None:
 
 
 def main() -> None:
+    global FORCE_OVERWRITE
+    parser = argparse.ArgumentParser(description="Generate Khoros-IV 256-color retro assets.")
+    parser.add_argument(
+        "--force",
+        action="store_true",
+        help="Overwrite existing PNG files in assets/.",
+    )
+    args = parser.parse_args()
+    FORCE_OVERWRITE = bool(args.force)
+
     generate_textures()
     generate_sprites()
     generate_weapons()
     generate_ui()
-    print("Generated all Khoros-IV 256-color retro assets in:", ASSETS_DIR)
+    print("Checked/generated Khoros-IV 256-color retro assets in:", ASSETS_DIR)
 
 
 if __name__ == "__main__":

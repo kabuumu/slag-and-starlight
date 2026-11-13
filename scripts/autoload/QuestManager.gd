@@ -67,6 +67,15 @@ func accept_quest(quest_res: Resource) -> bool:
 		bus.quest_updated.emit(qid, first_stage_id)
 		var q_title: String = str(quest_res.get("title")) if "title" in quest_res else qid
 		bus.combat_log_entry.emit("Quest Started: %s" % q_title, "quest")
+
+	if qid == "dead_mans_switch":
+		if bool(gs.call("get_flag", "has_lift_keycard", false)):
+			advance_objective(QuestStage.ObjectiveType.FETCH, "lift_override_keycard")
+		if bool(gs.call("get_flag", "has_seismic_blackbox", false)) or bool(gs.call("get_flag", "blackbox_given_to_kael", false)) or bool(gs.call("get_flag", "blackbox_sold", false)):
+			advance_objective(QuestStage.ObjectiveType.HACK, "room6_overseer_mainframe")
+		if bool(gs.call("get_flag", "killed_unit_734b", false)) or bool(gs.call("get_flag", "lift_restored", false)):
+			advance_objective(QuestStage.ObjectiveType.KILL, "unit_734b")
+
 	return true
 
 
@@ -104,10 +113,12 @@ func advance_objective(objective_type: int, target_id: String) -> void:
 				var s_xp: int = int(stage.get("xp_reward")) if "xp_reward" in stage else 0
 				var s_cr: int = int(stage.get("credit_reward")) if "credit_reward" in stage else 0
 				if ps != null:
-					if s_xp > 0 and ps.has_method("add_xp"):
-						ps.call("add_xp", s_xp)
 					if s_cr > 0:
 						ps.credits += s_cr
+					if s_xp > 0 and ps.has_method("add_xp"):
+						ps.call("add_xp", s_xp)
+					elif s_cr > 0 and bus != null:
+						bus.player_stats_changed.emit()
 				break
 
 		if progressed:
@@ -134,16 +145,21 @@ func advance_objective(objective_type: int, target_id: String) -> void:
 				var q_xp: int = int(quest.get("reward_xp")) if "reward_xp" in quest else 0
 				var q_cr: int = int(quest.get("reward_credits")) if "reward_credits" in quest else 0
 				if ps != null:
-					if q_xp > 0 and ps.has_method("add_xp"):
-						ps.call("add_xp", q_xp)
 					if q_cr > 0:
 						ps.credits += q_cr
+					if q_xp > 0 and ps.has_method("add_xp"):
+						ps.call("add_xp", q_xp)
+					elif q_cr > 0 and bus != null:
+						bus.player_stats_changed.emit()
 				if bus != null:
 					var q_title: String = str(quest.get("title")) if "title" in quest else qid
 					bus.combat_log_entry.emit("Quest Completed: %s (+%d XP, +%d Cr)" % [q_title, q_xp, q_cr], "quest")
 
 
 func _on_enemy_killed(enemy_id: String) -> void:
+	var gs: Node = get_node_or_null("/root/GameState")
+	if gs != null and gs.has_method("set_flag") and not enemy_id.is_empty():
+		gs.call("set_flag", "killed_%s" % enemy_id, true)
 	advance_objective(QuestStage.ObjectiveType.KILL, enemy_id)
 
 

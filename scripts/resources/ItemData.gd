@@ -26,6 +26,7 @@ enum SlotType {
 @export var description: String = ""
 @export var value_credits: int = 10
 @export var is_consumable: bool = false
+@export var is_melee_weapon: bool = false
 @export var heal_amount: int = 0
 @export var lockpick_bonus: float = 0.0
 

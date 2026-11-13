@@ -19,13 +19,32 @@ func run(tree: SceneTree, h: RefCounted, tier_filter: String) -> void:
 
 func _test_t1_dialogue_ui_and_topics(tree: SceneTree, h: RefCounted) -> void:
 	h.begin_test("T1_M5_dialogue_ui_loads_and_has_topic_list")
+	h.reset_singletons(tree)
+	var ps = h.get_autoload(tree, "PlayerStats")
 	var packed = h.load_scene_safe("res://scenes/ui/DialogueUI.tscn")
 	if not h.assert_not_null(packed, "DialogueUI.tscn must exist"):
 		h.end_test()
 		return
 	var ui = packed.instantiate()
+	tree.root.add_child(ui)
 	h.assert_not_null(ui, "DialogueUI must instantiate")
+	var kael_dlg = load("res://resources/dialogue/kael_dialogue.tres") as Resource
+	if kael_dlg != null and ui.has_method("open_dialogue"):
+		ui.open_dialogue(kael_dlg)
+		var portrait_rect = ui.find_child("PortraitRect", true, false) as TextureRect
+		if h.assert_not_null(portrait_rect, "PortraitRect must exist in DialogueUI"):
+			h.assert_true(portrait_rect.texture is AtlasTexture, "256x512 sprite sheet portrait must be wrapped in AtlasTexture")
+			if portrait_rect.texture is AtlasTexture:
+				h.assert_eq((portrait_rect.texture as AtlasTexture).region, Rect2(0, 0, 64, 64), "Portrait AtlasTexture region must be 64x64 front frame")
+		ui.close_dialogue()
+	if ps != null and ui.has_method("_execute_topic_action"):
+		ps.suit_power = 10.0
+		ui._execute_topic_action("reroute_life_support")
+		h.assert_eq(ps.backpack_items.size(), 1, "reroute_life_support must grant a Power Cell to backpack")
+		h.assert_approx(ps.suit_power, ps.max_suit_power, 0.01, "reroute_life_support must restore suit_power to max_suit_power")
+	tree.root.remove_child(ui)
 	ui.queue_free()
+	h.reset_singletons(tree)
 	h.end_test()
 
 
@@ -40,6 +59,16 @@ func _test_t1_quest_manager_and_dead_mans_switch(tree: SceneTree, h: RefCounted)
 	if qm.has_method("start_quest"):
 		qm.start_quest("dead_mans_switch")
 		h.assert_has(gs.active_quests, "dead_mans_switch", "Dead Man's Switch must be in active_quests")
+		# Verify out-of-order objective reconciliation when flags were set prior to start_quest
+		h.reset_singletons(tree)
+		gs.set_flag("has_lift_keycard", true)
+		gs.set_flag("has_seismic_blackbox", true)
+		qm.start_quest("dead_mans_switch")
+		var q_res: Resource = gs.active_quests.get("dead_mans_switch", null)
+		if h.assert_not_null(q_res, "Dead Man's Switch must be active"):
+			var stages: Array = q_res.get("stages")
+			h.assert_true(bool(stages[1].get("is_completed")), "Pre-looted keycard must reconcile Stage 2 fetch_keycard")
+			h.assert_true(bool(stages[2].get("is_completed")), "Pre-hacked blackbox must reconcile Stage 3 hack_mainframe")
 	h.reset_singletons(tree)
 	h.end_test()
 

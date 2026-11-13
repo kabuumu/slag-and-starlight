@@ -134,6 +134,17 @@ func _test_t2_skill_prerequisite_and_zero_points_failure(tree: SceneTree, h: Ref
 		ps.skill_points = 5
 		var ok_no_prereq: bool = ui.try_unlock_skill("ricochet_shot")
 		h.assert_false(ok_no_prereq, "Unlocking Tier 3 skill without prerequisites must fail")
+	if ui.has_method("perform_field_nano_repair"):
+		tree.root.add_child(ui)
+		ps.unlocked_skills.append("field_nano_repair")
+		var torso := load("res://resources/items/tattered_pressure_suit.tres").duplicate(true)
+		torso.set("durability", 10)
+		ps.equipped_items[2] = torso
+		ps.suit_power = 5.0
+		h.assert_eq(ui.perform_field_nano_repair(), 0, "Field Nano-Repair must fail when suit_power < 15.0")
+		ps.suit_power = 30.0
+		h.assert_eq(ui.perform_field_nano_repair(), 1, "Field Nano-Repair must succeed when suit_power >= 15.0")
+		tree.root.remove_child(ui)
 	ui.queue_free()
 	h.reset_singletons(tree)
 	h.end_test()

@@ -18,5 +18,6 @@ max_durability = 100
 description = "Heavy hydraulic pipe wrench, effective for bashing slag-ticks and crates."
 value_credits = 25
 is_consumable = false
+is_melee_weapon = true
 heal_amount = 0
 lockpick_bonus = 0.0

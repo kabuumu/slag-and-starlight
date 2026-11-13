@@ -93,24 +93,31 @@ func _test_t4_blackbox_turn_in_vs_keep(tree: SceneTree, h: RefCounted) -> void:
 	h.reset_singletons(tree)
 	var gs = h.get_autoload(tree, "GameState")
 	var ps = h.get_autoload(tree, "PlayerStats")
-	if not h.assert_not_null(gs, "GameState required") or not h.assert_not_null(ps, "PlayerStats required"):
+	var dlg_packed = h.load_scene_safe("res://scenes/ui/DialogueUI.tscn")
+	if not h.assert_not_null(gs, "GameState required") or not h.assert_not_null(ps, "PlayerStats required") or not h.assert_not_null(dlg_packed, "DialogueUI.tscn required"):
 		h.end_test()
 		return
-	# Branch 1: Turn in to Kael -> union reputation + bonus credits
+	var ui = dlg_packed.instantiate()
+	tree.root.add_child(ui)
+	# Branch 1: Turn in to Kael -> union reputation + bonus credits + clears has_seismic_blackbox
 	gs.set_flag("has_seismic_blackbox", true)
+	var bb_res := load("res://resources/items/seismic_blackbox.tres") as Resource
+	if bb_res != null:
+		ps.add_item_to_backpack(bb_res.duplicate(true))
 	var start_credits: int = ps.credits
-	gs.set_flag("blackbox_given_to_kael", true)
-	gs.modify_reputation("mining_union", 25)
-	ps.credits += 150
+	ui._execute_topic_action("give_blackbox_to_kael")
 	h.assert_gt(ps.credits, start_credits, "Turning in Blackbox to Kael awards bonus credits")
 	h.assert_gt(gs.faction_reputation.get("mining_union", 0), 0, "Turning in Blackbox increases Mining Union rep")
+	h.assert_false(gs.get_flag("has_seismic_blackbox", false), "Giving Blackbox to Kael must clear has_seismic_blackbox so it cannot also be sold")
 
 	# Branch 2: Keep Blackbox for corporate agents
 	h.reset_singletons(tree)
 	gs.set_flag("has_seismic_blackbox", true)
-	gs.set_flag("blackbox_kept", true)
+	ui._execute_topic_action("keep_blackbox")
 	h.assert_true(gs.get_flag("blackbox_kept", false))
 	h.assert_false(gs.get_flag("blackbox_given_to_kael", false))
+	tree.root.remove_child(ui)
+	ui.queue_free()
 	h.reset_singletons(tree)
 	h.end_test()
 
@@ -144,8 +151,10 @@ func _test_t4_unit_734b_boss_and_rust_spire_transition(tree: SceneTree, h: RefCo
 	lift.queue_free()
 
 	var hub = hub_packed.instantiate()
-	h.assert_not_null(hub, "RustSpireOutpost.tscn must instantiate after Cargo Lift transition")
-	hub.queue_free()
+	if h.assert_not_null(hub, "RustSpireOutpost.tscn must instantiate after Cargo Lift transition"):
+		for wall_name in ["PerimeterNorth", "PerimeterSouth", "PerimeterWest", "PerimeterEast"]:
+			h.assert_not_null(hub.get_node_or_null(wall_name), "RustSpireOutpost must have %s wall" % wall_name)
+		hub.queue_free()
 	h.reset_singletons(tree)
 	h.end_test()
 

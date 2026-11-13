@@ -24,6 +24,15 @@ func interact(_player: Node = null) -> void:
 			bus.combat_log_entry.emit("Cargo Lift locked! Requires Lift Override Keycard from Overseer Vos's Office.", "system")
 		return
 
+	var gs: Node = get_node_or_null("/root/GameState")
+	if gs != null:
+		if gs.has_method("set_flag"):
+			gs.call("set_flag", "lift_restored", true)
+		if "world_state" in gs:
+			gs.world_state["lift_powered"] = true
+			gs.world_state["lockdown_active"] = false
+			gs.world_state["current_sector"] = "rust_spire_outpost"
+
 	if bus != null:
 		bus.combat_log_entry.emit("Keycard accepted! Ascending to Rust-Spire Outpost...", "quest")
 

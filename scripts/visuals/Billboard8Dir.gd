@@ -9,6 +9,8 @@ func _ready() -> void:
 	billboard = BaseMaterial3D.BILLBOARD_FIXED_Y
 	texture_filter = BaseMaterial3D.TEXTURE_FILTER_NEAREST
 	vframes = 8
+	if hframes <= 1 and texture != null and texture.get_width() == 256:
+		hframes = 4
 
 
 func _process(_delta: float) -> void:

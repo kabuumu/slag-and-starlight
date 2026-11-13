@@ -43,7 +43,7 @@ topics = Array[Dictionary]([{
 "topic_id": "blackbox_turn_in"
 }, {
 "action": "keep_blackbox",
-"forbidden_flag": "blackbox_given_to_kael",
+"forbidden_flag": "blackbox_kept",
 "label": "Keep Seismic Blackbox for Surface",
 "required_flag": "has_seismic_blackbox",
 "response": "Keeping the logs for yourself, huh? Just make sure someone on the surface sees the truth—or at least pays what it's worth. Good luck on the lift.",

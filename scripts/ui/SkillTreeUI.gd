@@ -250,6 +250,8 @@ func perform_field_nano_repair() -> int:
 	var ps: Node = get_node_or_null("/root/PlayerStats")
 	if ps == null or not ps.has_skill("field_nano_repair"):
 		return 0
+	if float(ps.suit_power) < 15.0:
+		return 0
 	var tech: int = int(ps.attributes.get("tech", 5))
 	var repair_amount: int = 20 + tech * 2
 	var repaired_count: int = 0

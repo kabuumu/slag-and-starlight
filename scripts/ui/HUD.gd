@@ -11,6 +11,7 @@ const MAX_LOG_LINES: int = 6
 @onready var suit_value: Label = $StatusPanel/VBox/SuitRow/SuitValue
 @onready var combat_log_label: RichTextLabel = $CombatLogPanel/Margin/CombatLogLabel
 @onready var weapon_view: WeaponView2D = $WeaponAnchor/WeaponView2D
+@onready var interact_prompt_label: Label = get_node_or_null("InteractPromptLabel") as Label
 
 var _log_lines: Array[String] = []
 
@@ -20,9 +21,9 @@ func _ready() -> void:
 	mouse_filter = Control.MOUSE_FILTER_IGNORE
 	var bus: Node = get_node_or_null("/root/EventBus")
 	if bus != null:
-		if bus.has_signal("player_stats_changed"):
+		if bus.has_signal("player_stats_changed") and not bus.player_stats_changed.is_connected(_refresh_stats):
 			bus.player_stats_changed.connect(_refresh_stats)
-		if bus.has_signal("combat_log_entry"):
+		if bus.has_signal("combat_log_entry") and not bus.combat_log_entry.is_connected(_on_combat_log_entry):
 			bus.combat_log_entry.connect(_on_combat_log_entry)
 	_refresh_stats()
 	_connect_player()
@@ -50,6 +51,10 @@ func _ensure_death_banner() -> void:
 	add_child(_death_banner)
 
 
+func _process(_delta: float) -> void:
+	_update_interact_prompt()
+
+
 func _connect_player() -> void:
 	var tree: SceneTree = get_tree()
 	if tree == null:
@@ -60,6 +65,62 @@ func _connect_player() -> void:
 			player.set("weapon_view", weapon_view)
 		if player.has_signal("heat_changed") and not player.heat_changed.is_connected(_on_heat_changed):
 			player.heat_changed.connect(_on_heat_changed)
+
+
+func _update_interact_prompt() -> void:
+	if interact_prompt_label == null:
+		return
+	var tree: SceneTree = get_tree()
+	if tree == null or tree.paused:
+		interact_prompt_label.visible = false
+		return
+	var player: Node = tree.get_first_node_in_group("player")
+	if player == null or not ("interact_ray" in player):
+		interact_prompt_label.visible = false
+		return
+	var ray: RayCast3D = player.get("interact_ray") as RayCast3D
+	if ray == null or not ray.is_colliding():
+		interact_prompt_label.visible = false
+		return
+	var collider: Object = ray.get_collider()
+	var target: Object = collider
+	if target != null and not target.has_method("interact") and target is Node and (target as Node).get_parent() != null and (target as Node).get_parent().has_method("interact"):
+		target = (target as Node).get_parent()
+	var prompt: String = _get_interact_prompt_for(target)
+	interact_prompt_label.text = prompt
+	interact_prompt_label.visible = not prompt.is_empty()
+
+
+func _get_interact_prompt_for(target: Object) -> String:
+	if target == null or not target.has_method("interact"):
+		return ""
+	if "prompt_text" in target:
+		if "is_used" in target and bool(target.get("is_used")):
+			var itype: String = str(target.get("interaction_type")) if "interaction_type" in target else ""
+			if itype in ["pickup", "locker", "minigame"]:
+				return ""
+		var ptext: String = str(target.get("prompt_text"))
+		if not ptext.is_empty():
+			return "[E] %s" % ptext
+	if target is BlastDoor:
+		if not bool(target.get("is_open")):
+			return "[E] Inspect Blast Door"
+		return ""
+	if target is JunctionBox:
+		if not bool(target.get("is_blasted")):
+			return "[E] Inspect Junction Box"
+		return ""
+	if target is CargoLift:
+		return "[E] Activate Cargo Lift"
+	if target is EnemyBase:
+		if target.get("state") != EnemyBase.State.DEAD and not bool(target.get("is_friendly")):
+			var eid: String = str(target.get("enemy_id"))
+			if eid == "sentry_turret":
+				return "[E] Override / Overload Turret"
+			if eid in ["mining_drone", "unit_734b"]:
+				return "[E] Overload Capacitor"
+		return ""
+	return "[E] Interact"
 
 
 func _refresh_stats() -> void:

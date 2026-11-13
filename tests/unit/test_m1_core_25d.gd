@@ -124,10 +124,12 @@ func _test_t1_billboard_8dir(tree: SceneTree, h: RefCounted) -> void:
 		return
 	var sprite = Sprite3D.new()
 	sprite.set_script(script)
+	sprite.texture = load("res://assets/sprites/slag_tick.png") as Texture2D
 	sprite.vframes = 8
 	if sprite.has_method("_ready"):
 		sprite._ready()
 	h.assert_eq(sprite.billboard, BaseMaterial3D.BILLBOARD_FIXED_Y, "Billboard8Dir must use BILLBOARD_FIXED_Y")
+	h.assert_eq(sprite.hframes, 4, "Billboard8Dir must set hframes = 4 for 256px-wide sprite sheets")
 	sprite.queue_free()
 	h.end_test()
 

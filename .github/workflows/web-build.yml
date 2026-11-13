@@ -53,7 +53,7 @@ jobs:
           rm -rf /tmp/templates.tpz /tmp/templates_extract
 
       - name: Run project validator
-        run: python3 tests/validate_project.py
+        run: python3 tests/validate_project.py --milestone ALL
 
       - name: Import project resources
         run: /tmp/godot/godot --headless --import --quit

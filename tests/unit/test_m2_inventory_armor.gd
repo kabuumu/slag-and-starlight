@@ -62,6 +62,14 @@ func _test_t1_inventory_ui_7_slots_and_grid(tree: SceneTree, h: RefCounted) -> v
 		for c in n.get_children():
 			stack.append(c)
 	h.assert_ge(slot_count, 7, "InventoryUI must contain at least 7 equipment InventorySlot nodes")
+	var primary_layer := ui.find_child("PrimaryHandLayer", true, false) as TextureRect
+	var utility_layer := ui.find_child("UtilityLayer", true, false) as TextureRect
+	if h.assert_not_null(primary_layer, "PrimaryHandLayer must exist") and h.assert_not_null(utility_layer, "UtilityLayer must exist"):
+		h.assert_approx(primary_layer.offset_top, -32.0, 0.01, "PrimaryHandLayer must be constrained to 32px corner badge")
+		h.assert_approx(utility_layer.offset_top, -32.0, 0.01, "UtilityLayer must be constrained to 32px corner badge")
+	var barrel := load("res://resources/items/modded_blaster_barrel.tres") as Resource
+	if h.assert_not_null(barrel, "modded_blaster_barrel.tres must exist"):
+		h.assert_not_null(barrel.get("paper_doll_sprite"), "modded_blaster_barrel must have paper_doll_sprite assigned")
 	ui.queue_free()
 	h.end_test()
 

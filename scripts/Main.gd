@@ -16,6 +16,7 @@ extends Node
 
 
 func _ready() -> void:
+	process_mode = Node.PROCESS_MODE_ALWAYS
 	if sub_viewport_container != null:
 		sub_viewport_container.stretch = true
 		sub_viewport_container.stretch_shrink = 4
@@ -52,6 +53,14 @@ func load_level(scene_path: String) -> void:
 	var new_level: Node = packed.instantiate()
 	new_level.name = "CurrentLevel"
 	world_3d.add_child(new_level)
+	var gs: Node = get_node_or_null("/root/GameState")
+	if gs != null and "world_state" in gs:
+		if "RustSpireOutpost" in scene_path:
+			gs.world_state["current_sector"] = "rust_spire_outpost"
+			gs.world_state["lockdown_active"] = false
+			gs.world_state["lift_powered"] = true
+		elif "SubLevel04" in scene_path:
+			gs.world_state["current_sector"] = "sub_level_04"
 	var spawn: Node3D = new_level.get_node_or_null("PlayerSpawn") as Node3D
 	if player != null:
 		player.velocity = Vector3.ZERO

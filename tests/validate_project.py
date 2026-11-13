@@ -278,6 +278,13 @@ def validate_gdscript(path: Path, res: ValidationResult) -> None:
             line_no = cleaned[: m.start()].count("\n") + 1
             res.error(f"{rel}:{line_no}: Syntax leak detected: {desc}")
 
+    # Verify res:// path literals in GDScript exist on disk
+    for m in re.finditer(r'"res://([^"\s%]+)"', text):
+        rel_target = m.group(1)
+        if not (ROOT / rel_target).exists():
+            line_no = text[: m.start()].count("\n") + 1
+            res.error(f"{rel}:{line_no}: Broken res:// path literal 'res://{rel_target}'")
+
     # Interface contract checks
     contract = INTERFACE_CONTRACTS.get(rel)
     if contract:
@@ -303,12 +310,15 @@ def validate_scene_or_resource(path: Path, res: ValidationResult) -> None:
 
     # Collect ext_resource IDs and verify res:// paths exist
     ext_ids: Set[str] = set()
+    ext_paths_by_id: Dict[str, str] = {}
     for m in re.finditer(r'\[ext_resource\b([^\]]+)\]', text):
         attrs = m.group(1)
         path_m = re.search(r'path="res://([^"]+)"', attrs)
         id_m = re.search(r'id="([^"]+)"', attrs)
         if id_m:
             ext_ids.add(id_m.group(1))
+            if path_m:
+                ext_paths_by_id[id_m.group(1)] = path_m.group(1)
         if path_m:
             target = ROOT / path_m.group(1)
             if not target.exists():
@@ -321,6 +331,18 @@ def validate_scene_or_resource(path: Path, res: ValidationResult) -> None:
         if id_m:
             sub_ids.add(id_m.group(1))
 
+    # Verify load_steps header matches ext_resource + sub_resource + 1
+    header_m = re.search(r"^\[(?:gd_scene|gd_resource)\b([^\]]*)\]", text.lstrip())
+    if header_m:
+        ls_m = re.search(r"\bload_steps=(\d+)", header_m.group(1))
+        if ls_m:
+            declared_steps = int(ls_m.group(1))
+            expected_steps = len(ext_ids) + len(sub_ids) + 1
+            if declared_steps != expected_steps:
+                res.error(
+                    f"{rel}: load_steps={declared_steps} does not match ext({len(ext_ids)}) + sub({len(sub_ids)}) + 1 = {expected_steps}"
+                )
+
     # Verify ExtResource("...") and SubResource("...") references
     for m in re.finditer(r'ExtResource\(\s*"([^"]+)"\s*\)', text):
         ref_id = m.group(1)
@@ -331,6 +353,21 @@ def validate_scene_or_resource(path: Path, res: ValidationResult) -> None:
         ref_id = m.group(1)
         if ref_id not in sub_ids:
             res.error(f"{rel}: Undefined SubResource(\"{ref_id}\")")
+
+    # Verify Billboard8Dir Sprite3D nodes in .tscn files specify hframes = 4 and vframes = 8
+    if path.suffix == ".tscn":
+        billboard_ext_ids = {
+            eid for eid, epath in ext_paths_by_id.items() if epath.endswith("Billboard8Dir.gd")
+        }
+        if billboard_ext_ids:
+            node_blocks = re.split(r"(?m)^\[node\b", text)[1:]
+            for block in node_blocks:
+                for bb_id in billboard_ext_ids:
+                    if re.search(rf'script\s*=\s*ExtResource\(\s*"{re.escape(bb_id)}"\s*\)', block):
+                        if not re.search(r"(?m)^hframes\s*=\s*4\b", block):
+                            res.error(f"{rel}: Sprite3D with Billboard8Dir.gd is missing 'hframes = 4'")
+                        if not re.search(r"(?m)^vframes\s*=\s*8\b", block):
+                            res.error(f"{rel}: Sprite3D with Billboard8Dir.gd is missing 'vframes = 8'")
 
 
 def validate_shader(path: Path, res: ValidationResult) -> None:

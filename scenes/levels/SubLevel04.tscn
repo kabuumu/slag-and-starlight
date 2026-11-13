@@ -1,4 +1,4 @@
-[gd_scene load_steps=26 format=3]
+[gd_scene load_steps=52 format=3]
 
 [ext_resource type="Texture2D" path="res://assets/textures/floor_grate.png" id="1_floor"]
 [ext_resource type="Texture2D" path="res://assets/textures/wall_rust.png" id="2_wall"]
@@ -295,6 +295,19 @@ script = ExtResource("15_billboard")
 [node name="CollisionShape3D" type="CollisionShape3D" parent="Room3_SecurityCheckpoint/KaelNPC"]
 shape = SubResource("Shape_npc")
 
+[node name="CheckpointSupplyLocker" type="StaticBody3D" parent="Room3_SecurityCheckpoint"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 3.5, 0.9, 0)
+script = ExtResource("10_interact")
+interaction_type = "locker"
+prompt_text = "Open Checkpoint Gear Locker"
+item_paths = Array[String](["res://resources/items/mining_visor.tres", "res://resources/items/stabilizer_boots.tres"])
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="Room3_SecurityCheckpoint/CheckpointSupplyLocker"]
+mesh = SubResource("Mesh_locker")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Room3_SecurityCheckpoint/CheckpointSupplyLocker"]
+shape = SubResource("Shape_locker")
+
 [node name="Room4_HubJunction" type="Node3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -36)
 
@@ -392,6 +405,24 @@ mesh = SubResource("Mesh_catwalk")
 [node name="CollisionShape3D" type="CollisionShape3D" parent="Room5_OreProcessingBay/UpperCatwalk"]
 shape = SubResource("Shape_catwalk")
 
+[node name="CatwalkStep1" type="StaticBody3D" parent="Room5_OreProcessingBay"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -4.2, 0.7, 2.8)
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="Room5_OreProcessingBay/CatwalkStep1"]
+mesh = SubResource("Mesh_crate")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Room5_OreProcessingBay/CatwalkStep1"]
+shape = SubResource("Shape_crate")
+
+[node name="CatwalkStep2" type="StaticBody3D" parent="Room5_OreProcessingBay"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -4.2, 1.4, 1.6)
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="Room5_OreProcessingBay/CatwalkStep2"]
+mesh = SubResource("Mesh_crate")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Room5_OreProcessingBay/CatwalkStep2"]
+shape = SubResource("Shape_crate")
+
 [node name="MiningDrone1" parent="Room5_OreProcessingBay" groups=["room5_drones"] instance=ExtResource("18_drone")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2.5, 0, -1.0)
 
@@ -405,8 +436,8 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 1.5)
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 3.5, 2.4, 0)
 script = ExtResource("10_interact")
 interaction_type = "pickup"
-prompt_text = "Loot Dead Guard (Servo-Grip Gauntlets)"
-item_paths = Array[String](["res://resources/items/servo_grip_gauntlets.tres", "res://resources/items/raw_ore.tres"])
+prompt_text = "Loot Dead Guard (Servo-Grip Gauntlets & Deflector Pads)"
+item_paths = Array[String](["res://resources/items/servo_grip_gauntlets.tres", "res://resources/items/deflector_pads.tres", "res://resources/items/raw_ore.tres"])
 consume_on_use = true
 
 [node name="Sprite3D" type="Sprite3D" parent="Room5_OreProcessingBay/DeadGuardLoot"]
@@ -446,6 +477,23 @@ texture_filter = 0
 texture = ExtResource("9_pickup")
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="Room6_OverseersOffice/KeycardPickup"]
+shape = SubResource("Shape_pickup")
+
+[node name="HackingDeckPickup" type="StaticBody3D" parent="Room6_OverseersOffice"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2.5, 0.6, 1.2)
+script = ExtResource("10_interact")
+interaction_type = "pickup"
+prompt_text = "Take Hacking Deck"
+item_paths = Array[String](["res://resources/items/hacking_deck.tres"])
+consume_on_use = true
+
+[node name="Sprite3D" type="Sprite3D" parent="Room6_OverseersOffice/HackingDeckPickup"]
+pixel_size = 0.03
+billboard = 2
+texture_filter = 0
+texture = ExtResource("9_pickup")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Room6_OverseersOffice/HackingDeckPickup"]
 shape = SubResource("Shape_pickup")
 
 [node name="OverseersMainframe" type="StaticBody3D" parent="Room6_OverseersOffice"]
